@@ -1,0 +1,97 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 0.8.3a ] */
+
+/* [wxMaxima: title   start ]
+Análise de Funções
+   [wxMaxima: title   end   ] */
+
+/* [wxMaxima: comment start ]
+v0.2
+Arkanon <arkanon@ceat.net>
+13/08/2009 Qui 09:46
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+kill(all);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+n(x):=x^2+1;
+d(x):=x+1;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+f(x):=n(x)/d(x);
+f(x);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+       n(x)
+f(x) = ----
+       d(x)
+
+n(x) = d(x)q(x) + r(x), grau(r) < grau(d)
+
+              r(x)
+f(x) = q(x) + ----
+              d(x)
+
+        2      2          2
+       x +1   x +1+1-1   x -1+2   (x+1)(x-1)+2          2
+f(x) = ---- = -------- = ------ = ------------ = x-1 + ---
+        x+1      x+1       x+1        x+1              x+1
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+d1(x):=diff(f(x),x);
+d1(x);
+factor(d1(x));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+d2(x):=diff(f(x),x,2);
+d2(x);
+factor(d2(x));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+limit(f(x),x,inf);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+limit(f(x),x,-inf);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+limit(f(x),x,-1);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+limit(f(x),x,-1,minus);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+limit(f(x),x,-1,plus);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+limit(d(x),x,inf);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+assint1:[parametric,-1,t,[t,-8,6]];
+assint2:x-1;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+curves:[f(x),assint1,assint2];
+  xint:[x,-8,8];
+  yint:[y,-8,6];
+aspect:[gnuplot_preamble, "set size ratio 1"];
+   box:[box, false];
+legend:[legend,"f(x)","assint1","assint2"];
+wxplot2d(curves,xint,yint,aspect,box,legend);
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$
