@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+  <title>Edwin L. (Ted) Woollett</title>
+
+  <meta name="keywords" content="Computational Physics with Maxima or R, Maxima by Example, Edwin L Woollett, Ted Woollett, classical particle scattering, white dwarf structure, molecular vibrations, classical chaos, Schroedinger's Equation, boundary value problems, eigenvalue problems">
+
+  <style>
+
+    body
+    {
+      font-family: sans-serif;
+      font-size: 12px;
+      background: #fffaf0;
+      color: #444444;
+    }
+
+    a,
+    a b
+    {
+      text-decoration: none;
+      color: #fa8072;
+    }
+
+    a:visited,
+    a:visited b
+    {
+      color: blue;
+    }
+
+    b
+    {
+      color: black;
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+<p><a href="http://web.csulb.edu/~woollett" target="_blank">Original page</a>.</p>
+<p><a href="#mbe">Go to <b>Maxima by Example</b></a>.</p>
+
+<img src="ted1.jpg">
+<img src="curlews2.jpg">
+
+<ul>
+  <li><b>Edwin L. (Ted) Woollett</b></li>
+  <li>Professor Emeritus, Physics & Astron., CSULB</li>
+  <li>Ph.D. - Kansas State Univ, 1965</li>
+  <li>Computational Physics</li>
+</ul>
+
+<h1>Computational Physics with Maxima or R</h1>
+
+<h2>Chapter 1: Numerical Differentiation, Quadrature, and Roots</h2>
+
+<p>A brief introduction to both Maxima and R is followed by examination of built-in and package tools for numerical differentiation, quadrature, and root finding, with examples of use, and the design of homemade functions designed to employ the simplest numerical methods for these three areas of numerical work.</p>
+
+<ol>
+  <li><a href="files/cp1.pdf"     >cp1.pdf     </a> &mdash; Aug. 31, 2015 , Maxima 5.28.0, R 3.0.1 , Ch. 1, 70 pages       </li>
+  <li><a href="files/cp1.tex"     >cp1.tex     </a> &mdash; Aug. 31, 2015                          , Ch. 1 Latex code file </li>
+  <li><a href="files/cp1code.R"   >cp1code.R   </a> &mdash; Aug. 31, 2015 , R 3.0.1                , R code for Ch. 1      </li>
+  <li><a href="files/cp1code.mac" >cp1code.mac </a> &mdash; Aug. 31, 2015 , Maxima 5.28.0          , Maxima code for Ch. 1 </li>
+  <li><a href="files/cpnewton.mac">cpnewton.mac</a> &mdash; Aug. 31, 2015 , Maxima 5.28.0          , Maxima code for Ch. 1 </li>
+  <li><a href="files/cp1.zip"     >cp1.zip     </a> &mdash; Aug. 31, 2015                          , Ch. 1 zip    file     </li>
+  <li><a href="files/cp1.tar.gz"  >cp1.tar.gz  </a> &mdash; Aug. 31, 2015                          , Ch. 1 tar.gz file     </li>
+</ol>
+
+<h3>Chapter 1 Topics</h3>
+
+<ol>
+  <li>Introduction to R and Maxima</li>
+  <li>Numerical Derivative Functions in R</li>
+  <li>Testing Simple Numerical Derivative Algorithms with R and Maxima</li>
+  <li>Quadrature Functions in R and Maxima</li>
+  <li>Testing Trapezoidal and Simpson's Rule Algorithms with R and Maxima</li></li>
+  <li>Dealing with Unbounded Integrals and End Point Singularities</li>
+  <li>Root Finding Functions in R and Maxima</li>
+  <li>Simple Divide and Conquer Strategy</li>
+  <li>Testing Newton-Raphson and Secant Methods with R and Maxima</li>
+  <li>Testing Bigfloat Newton-Raphson with Maxima</li>
+  <li>Margins and Outer Margin Area in R Plots</li>
+  <li>Drawing Circles Using R</li>
+</ol>
+
+<h3>Example 1: Semiclassical Quantization of Molecular Vibrations</h3>
+
+<p>Examples of "bottom-up" programming in both R and Maxima for a physics problem which makes use of both quadrature and root finding.</p>
+
+<ol>
+  <li><a href="files/example1.pdf"   >example1.pdf   </a> &mdash; Aug. 31, 2015 , Maxima 5.28.0, R 3.0.1 , Example 1, 17 pages </li>
+  <li><a href="files/example1.tex"   >example1.tex   </a> &mdash; Aug. 31, 2015                          , Latex code file     </li>
+  <li><a href="files/example1.R"     >example1.R     </a> &mdash; Aug. 31, 2015 , R 3.0.1                , R code              </li>
+  <li><a href="files/example1.mac"   >example1.mac   </a> &mdash; Aug. 31, 2015 , Maxima 5.28.0          , Maxima code         </li>
+  <li><a href="files/example1.zip"   >example1.zip   </a> &mdash; Aug. 31, 2015                          , zip    file         </li>
+  <li><a href="files/example1.tar.gz">example1.tar.gz</a> &mdash; Aug. 31, 2015                          , tar.gz file         </li>
+</ol>
+
+<h3>Project 1: Classical Rutherford Scattering in a Central Potential</h3>
+
+<p>Scattering theory notation, and plots of the effective potential, scattering trajectories, scattering angles, and differential scattering cross sections for the Rutherford potential (repulsive and attractive) and for the Lennard-Jones potential. Includes a brief introduction to Maxima's rk() function and R's ode() function, which are used for the scattering trajectory plots.</p>
+
+<ol>
+  <li><a href="files/project1.pdf"          >project1.pdf          </a> &mdash; Aug. 30, 2015 , Maxima 5.31.2, R 3.0.2 , Project 1, 56 pages                                  </li>
+  <li><a href="files/project1.tex"          >project1.tex          </a> &mdash;                                        , Latex code file                                      </li>
+  <li><a href="files/cmass.R"               >cmass.R               </a> &mdash; Aug. 30, 2015 , R 3.0.2                , R code for center of mass diagram                    </li>
+  <li><a href="files/coord.R"               >coord.R               </a> &mdash; Aug. 30, 2015 , R 3.0.2                , R code for coordinate diagram                        </li>
+  <li><a href="files/k1util.mac"            >k1util.mac            </a> &mdash; Aug. 30, 2015 , Maxima 5.31.2          , Maxima utility functions                             </li>
+  <li><a href="files/lennard_jones.mac"     >lennard_jones.mac     </a> &mdash; Aug. 30, 2015 , Maxima 5.31.2                                                                 </li>
+  <li><a href="files/lennard_jones.R"       >lennard_jones.R       </a> &mdash; Aug. 30, 2015 , R 3.0.2                                                                       </li>
+  <li><a href="files/rutherford_attract.mac">rutherford_attract.mac</a> &mdash; Aug. 30, 2015 , Maxima 5.31.2                                                                 </li>
+  <li><a href="files/rutherford_attract.R"  >rutherford_attract.R  </a> &mdash; Aug. 30, 2015 , R 3.0.2                                                                       </li>
+  <li><a href="files/rutherford_repulse.mac">rutherford_repulse.mac</a> &mdash; Aug. 30, 2015 , Maxima 5.31.2                                                                 </li>
+  <li><a href="files/rutherford_repulse.R"  >rutherford_repulse.R  </a> &mdash; Aug. 30, 2015 , R 3.0.2                                                                       </li>
+  <li><a href="files/scatt.R"               >scatt.R               </a> &mdash; Aug. 30, 2015 , R 3.0.2                , R code for scattering angle diagram                  </li>
+  <li><a href="files/sho1.R"                >sho1.R                </a> &mdash; Aug. 30, 2015 , R 3.0.2                , R code for integration of simple harmonic oscillator </li>
+  <li><a href="files/project1.zip"          >project1.zip          </a> &mdash; Aug. 30, 2015                          , zip    file                                          </li>
+  <li><a href="files/project1.tar.gz"       >project1.tar.gz       </a> &mdash; Aug. 30, 2015                          , tar.gz file                                          </li>
+</ol>
+
+<h2>Chapter 2: Initial Value Problems</h2>
+
+A variety of initial value problems are solved using both R and Maxima.
+Homemade codes for the Euler method and the classical fourth order Runge-Kutta method are demonstrated with numerous examples.
+The standard Maxima methods rk and rkf45 are discussed, and the R deSolve package ode method is extensively discussed with many examples.
+Finally, methods for solving initial value problems in which the derivatives are discontinuous and in which the dependent variables are discontinuous are discussed.
+
+<ol>
+  <li><a href="files/cp2.pdf"    >cp2.pdf    </a> &mdash; Aug. 29, 2015 , Maxima 5.31.0, R 3.0.2 , Chapter 2, 71 pages                    </li>
+  <li><a href="files/cp2.tex"    >cp2.tex    </a> &mdash; Aug. 29, 2015                          , Latex code file                        </li>
+  <li><a href="files/k2util.mac" >k2util.mac </a> &mdash; Aug. 29, 2015                          , Maxima utility functions               </li>
+  <li><a href="files/myode.mac"  >myode.mac  </a> &mdash; Aug. 29, 2015 , Maxima 5.31            , Maxima code                            </li>
+  <li><a href="files/myode.R"    >myode.R    </a> &mdash; Aug. 29, 2015 , R 3.0.2                , R code                                 </li>
+  <li><a href="files/myrkf45.mac">myrkf45.mac</a> &mdash; Aug. 29, 2015 , Maxima 5.31            , rkf45 Adaptive Runge Kutta Maxima code </li>
+  <li><a href="files/cp2.zip"    >cp2.zip    </a> &mdash; Aug. 29, 2015                          , zip    file                            </li>
+  <li><a href="files/cp2.tar.gz" >cp2.tar.gz </a> &mdash; Aug. 31, 2015                          , tar.gz file                            </li>
+</ol>
+
+<h3>Chapter 2 Topics</h3>
+
+<ol>
+  <li>The Euler Method, Truncation Errors, Round-off Errors, Instability</li>
+  <li>4th Order Runge-Kutta Code for R and Maxima</li>
+  <li>The Maxima Methods rk and rkf45</li>
+  <li>The R package deSolve and Use of ode</li>
+  <li>Solving O.D.E.'s with External Forcing Data</li>
+  <li>Integrating O.D.E.'s with Discontinuous Derivatives</li>
+  <li>Integrating O.D.E.'s with Discontinuous Dependent Variables Using R</li>
+  <ol>
+    <li>Events Specified with a data.frame</li>
+    <li>Intravenous Drug Injection Model</li>
+    <li>Using an Event Function at Specified Times</li>
+    <li>Using an Event Function when a Root Condition is Satisfied</li>
+    <li>Use of a Switching Parameter as a Dependent Variable</li>
+  </ol>
+</ol>
+
+<h3>Example 2: Surfaces of Section for the Henon-Heiles Potential</h3>
+
+<p>Examples of "bottom-up" programming in both R and Maxima for the trajectories and surfaces of section for a classical particle orbiting in the Henon-Heiles potential. This potential was first studied as a mathematical model to describe the chaotic motion of a test star in an axisymmetric galactic mean gravitational field. The June 3 update includes new code rk41 designed to land on the final point, providing improved surface of section behavior.</p>
+
+<ol>
+  <li><a href="files/example2.pdf"   >example2.pdf   </a> &mdash; Aug. 28, 2015 , Maxima 5.31, R 3.0.2 , Example 2, 25 pages </li>
+  <li><a href="files/example2.tex"   >example2.tex   </a> &mdash; Aug. 28, 2015                        , Latex code file     </li>
+  <li><a href="files/example2.R"     >example2.R     </a> &mdash; Aug. 28, 2015 , R 3.0.2              , R code              </li>
+  <li><a href="files/example2.mac"   >example2.mac   </a> &mdash; Aug. 28, 2015 , Maxima 5.31          , Maxima code         </li>
+  <li><a href="files/hhplota.R"      >hhplota.R      </a> &mdash; Aug. 28, 2015 , R 3.0.2              , R code              </li>
+  <li><a href="files/example2.zip"   >example2.zip   </a> &mdash; Aug. 28, 2015                        , zip    file         </li>
+  <li><a href="files/example2.tar.gz">example2.tar.gz</a> &mdash; Aug. 31, 2015                        , tar.gz file         </li>
+</ol>
+
+<h3>Project 2: Structure of a White Dwarf Star</h3>
+
+<p>A pedagogical discussion of the differential equations for the mass profile m(r) and the mass density profile rho(r), assuming the cold degenerate relativistic electron gas provides the internal pressure, and the non-degenerate heavy nuclei provide the gravitational  attraction. Both R and Maxima code are used in parallel treatments to draw plots (for a given central density) of m(r), rho(r), kinetic energy profile k(r), gravitational energy profile u(r), and to explore the total energy (including rest mass energy) as a function of central mass density and the stellar mass, and to plot the stellar radius as a function of stellar mass.</p>
+
+<ol>
+  <li><a href="files/project2.pdf"   >project2.pdf   </a> &mdash; Aug. 25, 2015 , Maxima 5.31.2, R 3.0.2 , Project 2, 27 pages </li>
+  <li><a href="files/project2.tex"   >project2.tex   </a> &mdash; Aug. 25, 2015                          , Latex code file     </li>
+  <li><a href="files/project2.R"     >project2.R     </a> &mdash; Aug. 25, 2015 , R 3.0.2                , R code              </li>
+  <li><a href="files/project2.mac"   >project2.mac   </a> &mdash; Aug. 25, 2015 , Maxima 5.31            , Maxima code         </li>
+  <li><a href="files/project2.zip"   >project2.zip   </a> &mdash; Aug. 25, 2015                          , zip    file         </li>
+  <li><a href="files/project2.tar.gz">project2.tar.gz</a> &mdash; Aug. 31, 2015                          , tar.gz file         </li>
+</ol>
+
+<h2>Chapter 3: Two Point Boundary Value and Eigenvalue Problems</h2>
+
+<h3>Chapter 3 Topics</h3>
+
+<ol>
+  <li>Shooting Methods for 2nd Order ODE's</li>
+  <li>Using the R Package bvpSolve</li>
+  <li>Mono-Implicit Runge-Kutta R Method bvptwp</li>
+  <li>Poisson's Equation</li>
+  <li>Wave Equation</li>
+</ol>
+
+<h3>Example 3: Schroedinger's Equation</h3>
+
+<p>Detailed investigation of energy levels and corresponding wave functions for the finite rectangular potential well and the Lennard-Jones 6-12 Potential.</p>
+<p>Runge-Kutta integration is used for the finite well problem, and the Numerov method is used for the Lennard-Jones potential problem.</p>
+
+<h3>Files for Ch. 3 and Example 3</h3>
+
+<p>The files cp3.zip and cp3.tar.gz include both the Ch. 3 and the Example 3 files.</p>
+
+<ol>
+  <li><a href="files/cp3.pdf"     >cp3.pdf     </a> &mdash; Aug. 24, 2015                 , Ch. 3 pdf   file                              </li>
+  <li><a href="files/cp3.tex"     >cp3.tex     </a> &mdash; Aug. 24, 2015                 , Ch. 3 latex file                              </li>
+  <li><a href="files/cp3.mac"     >cp3.mac     </a> &mdash; Aug. 24, 2015 , Maxima 5.31.2 , Maxima code for Ch. 3                         </li>
+  <li><a href="files/cp3.R"       >cp3.R       </a> &mdash; Aug. 24, 2015 , R 3.0.2       , R      code for Ch. 3                         </li>
+  <li><a href="files/example3.pdf">example3.pdf</a> &mdash; Aug. 24, 2015                 , Example 3 pdf   file, Schroedinger's Equation </li>
+  <li><a href="files/example3.tex">example3.tex</a> &mdash; Aug. 24, 2015                 , Example 3 latex file, Schroedinger's Equation </li>
+  <li><a href="files/FW.mac"      >FW.mac      </a> &mdash; Aug. 24, 2015 , Maxima 5.31.2 , Maxima code for Finite Rectangular Well       </li>
+  <li><a href="files/FW.R"        >FW.R        </a> &mdash; Aug. 24, 2015 , R 3.0.2       , R      code for Finite Rectangular Well       </li>
+  <li><a href="files/LJ6-12.mac"  >LJ6-12.mac  </a> &mdash; Aug. 24, 2015 , Maxima 5.31.2 , Maxima code for Lennard-Jones Potential       </li>
+  <li><a href="files/LJ6-12.R"    >LJ6-12.R    </a> &mdash; Aug. 24, 2015 , R 3.0.2       , R      code for Lennard-Jones Potential       </li>
+  <li><a href="files/cp3.zip"     >cp3.zip     </a> &mdash; Aug. 24, 2015 , Maxima 5.31.2 , R 3.0.2 zip    file                           </li>
+  <li><a href="files/cp3.tar.gz"  >cp3.tar.gz  </a> &mdash; Aug. 24, 2015 , Maxima 5.31.2 , R 3.0.2 tar.gz file                           </li>
+</ol>
+
+<p><a href="http://www.r-project.org/">R (link to project page)</a> is a freely available, open source, and powerful numerical interpreter with some similarities with the commercial Matlab platform. Although primarily used (at present) for statistics and data science, R is increasingly being used for numerical programming in the physical sciences. Combining the numerical abilities of R with the symbolic and numerical abilities of Maxima provides a strong alternative to Mathematica, Maple, etc.</p>
+
+<h1><a name="mbe">Maxima by Example</a></h1>
+
+<p><a href="http://maxima.sourceforge.net/">Maxima (link to project page)</a> is a freely available and powerful computer algebra system (CAS) which is an open source cousin of the commercial Macsyma CAS. Maxima has powerful symbolic, numerical, and graphical capabilities, and you can download as many copies as you need without the hassle of license negotiations with Mathematica or Maple. Maxima is being steadily improved by an energetic development team of volunteers. An email <a href="http://maxima.sourceforge.net/maximalist.html"> "mailing list" </a>  provides an effective and friendly means of getting and providing advice on the practical use of Maxima with your research or project.</p>
+<p><b>Maxima by Example</b> is a series of tutorial notes which include many examples of the power of Maxima. Designed for the new user, we include some "nuts and bolts" suggestions for working with the Maxima software, especially for the Windows user. The posted files use 12 point type, which makes for easier reading at the computer screen, but costs more to print.</p>
+<p>Reading these notes on your computer makes more sense than printing them out, although you may want to print out the first page which has the table of contents. It is easier to keep a live set of notes up to date than a book.</p>
+<p>NON-PROFIT PRINTING AND DISTRIBUTION OF THE CHAPTER PDF FILES IS PERMITTED.</p>
+<p>Notepad++ is my Windows editor of choice for editing Maxima, html, and tex files. The Sourceforge download page is <a href="http://sourceforge.net/projects/notepad-plus/">here</a>.</p>
+
+<ol>
+  <li><a href="#mbe01">Chapter 1: Introduction to Maxima</a></li>
+  <li><a href="#mbe02">Chapter 2: Plots, Files, Read, Write, and Fit</a></li>
+  <li><a href="#mbe03">Chapter 3: Ordinary Differential Equation Tools</a></li>
+  <li><a href="#mbe04">Chapter 4: Solving Equations</a></li>
+  <li><a href="#mbe05">Chapter 5: 2D Plots and Graphics using qdraw</a></h2>
+  <li><a href="#mbe06">Chapter 6: Differential Calculus</a></li>
+  <li><a href="#mbe07">Chapter 7: Symbolic Integration</a></li>
+  <li><a href="#mbe08">Chapter 8: Numerical Integration</a></li>
+  <li><a href="#mbe09">Chapter 9: Bigfloats and Arbitrary Precision Quadrature</a></li>
+  <li><a href="#mbe10">Chapter 10: Fourier Series, Fourier and Laplace Transforms</a></li>
+  <li><a href="#mbe11">Chapter 11: Fast Fourier Transform Tools</a></li>
+  <li><a href="#mbe12">Chapter 12: Dirac Algebra and Quantum Electrodynamics, Version 2</a></li>
+  <li><a href="#mbe-a">Quark Gluon Hard Scattering Processes</a></li>
+  <li><a href="#mbe-b">A Clebsch-Gordan Coefficient Package for Maxima</a></li>
+  <li><a href="#mbe-c">A Simple Maxima Lagrangian Mechanics Package</a></li>
+  <li><a href="#mbe-d">Symbolic Pauli Matrix Commutator Expansions</a></li>
+</ol>
+
+<hr>
+
+<h2><a name="mbe01"></a><a href="#mbe">Chapter 1: Introduction to Maxima</a></h2>
+
+<p>Chapter 1 has been completely restructured and rewritten in order to provide a better introduction to this series of notes. Note that the name of the file has been changed to mbe1intro.pdf. The Latex file mbe1intro.tex contains the complete latex source code, and can be used by Maxima users to construct their own personal notes or class handouts.</p>
+
+<ol>
+  <li><a href="files/mbe1intro.pdf">mbe1intro.pdf</a> &mdash; Aug. 11, 2009 , Maxima 5.19.0 , Introduction to Maxima, 57 pages </li>
+  <li><a href="files/mbe1intro.tex">mbe1intro.tex</a> &mdash; Aug. 11, 2009 , Maxima 5.19.0 , Latex code for Ch. 1             </li>
+  <li><a href="files/mbe1toc.txt"  >mbe1toc.txt  </a> &mdash; Aug. 11, 2009                 , Ch. 1 Detailed Table of Contents </li>
+  <li><a href="files/mbe1code.txt" >mbe1code.txt </a> &mdash; Aug. 11, 2009 , Maxima 5.19.0 , Ch. 1 Code input text file       </li>
+  <li><a href="files/mbe1util.mac" >mbe1util.mac </a> &mdash; Aug. 11, 2009 , Maxima 5.19.0 , Ch. 1 Maxima Utility Functions   </li>
+</ol>
+
+<h3>Chapter 1 Topics</h3>
+
+<ol>
+  <li>What is Maxima?</li>
+  <li>Introduction to the wxMaxima Interface</li>
+  <li>Introduction to the Xmaxima Interface</li>
+  <li>Creating and Using a Startup File</li>
+  <li>Maxima Expressions, Numbers, Operators, Constants, and Reserved Words</li>
+  <li>Input and Output Examples</li>
+  <li>Maxima Power Tools at Work</li>
+  <li>User Defined Maxima Functions</li>
+  <li>History of Maxima</li>
+</ol>
+
+<p>The text file mbe1util.mac is free software: you can redistribute it and/or modify it under the terms of the GNU GENERAL PUBLIC LICENSE as published by the Free Software Foundation.</p>
+
+<h2><a name="mbe02"></a><a href="#mbe">Chapter 2: Plots, Files, Read, Write, and Fit</a></h2>
+
+<p>Chapter 2 has been revised to include a large section on working with files from within Maxima. The new software file mfiles.mac includes many useful file manipulation functions. The small file mfiles1.lisp is loaded in by mfiles.mac.</p>
+<p>Since Jan. 19, 2012, all updates reflect the necessity of using the complete file path (in ver. 5.26.0 thru 5.31) for all of the "file name slots" in the file manipulation functions defined in mfiles.mac. To save typing, one can define (in your maxima-init.mac file) a function mkp (make path) which makes use of a global parameter bpath which is a string which provides the base of the path to your work folder. One can then use mkp("myfile1.txt") instead of "c:/work2/myfile1.txt" as an argument to a file name slot. This is discussed at length in the introduction to the File section of chapter two.</p>
+
+<ol>
+  <li><a href="files/mbe2plotfit.pdf">mbe2plotfit.pdf</a> &mdash; Jan.  6, 2014                 , Maxima 5.31.2, 40 pages                </li>
+  <li><a href="files/mbe2plotfit.tex">mbe2plotfit.tex</a> &mdash; Jan.  6, 2014                 , Latex code file                        </li>
+  <li><a href="files/mbe2toc.txt"    >mbe2toc.txt    </a> &mdash; Jan.  6, 2014                 , Detailed table of contents             </li>
+  <li><a href="files/mbe2code.txt"   >mbe2code.txt   </a> &mdash; Jan.  6, 2014 , Maxima 5.31.2 , Code file                              </li>
+  <li><a href="files/qplot.mac"      >qplot.mac      </a> &mdash; Oct.  3, 2011 , Maxima 5.25.1 , Maxima code for quick plots            </li>
+  <li><a href="files/mfiles.mac"     >mfiles.mac     </a> &mdash; Jan. 19, 2012 , Maxima 5.28.0 , Maxima code for file work              </li>
+  <li><a href="files/mfiles1.lisp"   >mfiles1.lisp   </a> &mdash; Oct.  3, 2011 , Maxima 5.25.1 , Lisp code loaded by mfiles.mac         </li>
+  <li><a href="files/coffee.dat"     >coffee.dat     </a> &mdash; Jul. 13, 2009                 , Coffee cooling tab separated data file </li>
+</ol>
+
+<h3>Chapter 2 Topics</h3>
+
+<p>Introduction to plot2d.</p>
+
+<ol>
+  <li>First Steps with plot2d</li>
+  <li>Parametric Plots</li>
+  <li>Line Width and Color Controls</li>
+  <li>Discrete Data Plots: Point Size, Color, and Type Control</li>
+  <li>Plot of a Discontinuous Function</li>
+  <li>Using qplot for Quick Plots of One or More Functions</li>
+  <li>Multiple Plots Using the Embedded Option</li>
+</ol>
+
+<p>Working with Files Using the Package mfiles.mac</p>
+
+<ol>
+  <li>file_search, probe_file, ls, and dir</li>
+  <li>ftype, file_length, file_info</li>
+  <li>print_file, print_lines</li>
+  <li>rename_file, delete_file, copy_file, file_convert, ftext_replace</li>
+  <li>Break file lines with pbreak(), email reply with reply_to</li>
+  <li>Search File with search_file</li>
+  <li>Search Multiple files with search_mfiles</li>
+  <li>read_data, read_text, write_data, with_stdout</li>
+</ol>
+
+<p>Least Squares Fit to Experimental Data</p>
+
+<ol>
+  <li>Syntax of lsquares_estimates</li>
+  <li>Coffee Cooling Model</li>
+  <li>Experiment Data for Coffee Cooling</li>
+  <li>Least Squares Fit of Coffee Cooling Data</li>
+</ol>
+
+<p>The new function read_data is designed to work correctly with unix, mac, and windows type text files. read_data uses the new function read_line which is a replacement for the current Maxima function readline.</p>
+<p>The new function print_file correctly reads unix, mac, and windows files and is a replacement for the current Maxima function printfile.</p>
+
+<h2><a name="mbe03"></a><a href="#mbe">Chapter 3: Ordinary Differential Equation Tools</a></h2>
+
+<ol>
+  <li><a href="files/mbe3ode1.pdf">mbe3ode1.pdf</a> &mdash; Sep. 16, 2010 , Maxima 5.18.1 , 44 pages                   </li>
+  <li><a href="files/mbe3ode1.tex">mbe3ode1.tex</a> &mdash; Sep. 16, 2010                 , Latex code file            </li>
+  <li><a href="files/mbe3toc.txt" >mbe3toc.txt </a> &mdash; Jul. 19, 2009                 , Detailed Table of Contents </li>
+  <li><a href="files/mbe3code.txt">mbe3code.txt</a> &mdash; Jul. 19, 2009 , Maxima 5.18.1 , Code input text file       </li>
+</ol>
+
+<h3>Chapter 3 Topics</h3>
+
+<ol>
+  <li>Solution of One First Order Ordinary Differential Equation (ODE)</li>
+  <li>Exact Solution with ode2 and ic1</li>
+  <li>Exact Solution with desolve</li>
+  <li>Numerical Solution and Plot with plotdf</li>
+  <li>Numerical Solution with Fourth Order Runge-Kutta: rk</li>
+  <li>Solution of One Second Order or Two First Order ODE's</li>
+  <li>Exact Solution with ode2, ic2, and eliminate</li>
+  <li>Exact Solution with desolve, atvalue, and eliminate</li>
+  <li>Numerical Solution and Plot with plotdf</li>
+  <li>Numerical Solution with Fourth Order Runge-Kutta: rk</li>
+  <li>Ex.1: Fall in Gravity with Air Friction: Terminal Velocity</li>
+  <li>Ex.2: One Nonlinear First Order ODE</li>
+  <li>Ex.3: One First Order ODE Which is Not Linear in Y'</li>
+  <li>Ex.4: Linear Oscillator with Damping</li>
+  <li>Ex.5: Underdamped Linear Oscillator with Sinusoidal Driving Force</li>
+  <li>Ex.6: Regular and Chaotic Motion of a Driven Damped Planar Pendulum</li>
+  <li>Using contrib_ode for ODE's</li>
+</ol>
+
+<h2><a name="mbe04"></a><a href="#mbe">Chapter 4: Solving Equations</a></h2>
+
+<ol>
+  <li><a href="files/mbe4solve.pdf">mbe4solve.pdf</a> &mdash; Jan. 29, 2009 , Maxima 5.17.1   , 48 pages           </li>
+  <li><a href="files/mbe4solve.tex">mbe4solve.tex</a> &mdash; Jan. 29, 2009                   , Latex code file    </li>
+  <li><a href="files/mymnewton.mac">mymnewton.mac</a> &mdash; Jan. 29, 2009 , Maxima 5.17.1                        </li>
+  <li><a href="files/mbe4solve.txt">mbe4solve.txt</a> &mdash; Apr.  9, 2008 , Maxima 5.14     , Cut and paste code </li>
+</ol>
+
+<h3>Chapter 4 Topics</h3>
+
+<ol>
+  <li>One Equation or Expression: Symbolic Solution or Roots (solve)</li>
+  <li>One Equation Numerical Solutions: allroots, realroots, find_root</li>
+  <li>Two or More Equations: Symbolic and Numerical Solutions (linsolve, linsolve_by_lu</li>
+  <li>eliminate, newton, mnewton, implicit_plot, draw package implicit)</li>
+</ol>
+
+<p>Chapter 4 provides numerous examples of using Maxima tools to solve equations. Extra attention has been given to matrix methods for sets of linear equations, using linsolve_by_lu. The chapter ends with an interactive work session implementing a homemade "mymnewton" which is followed by creation of a homemade mymnewton function which has at its core a linsolve_by_lu matrix based function. Readers can download the text file "mymnewton.mac" and experiment with the code and experiment with adapting the code for their own uses.</p>
+<p>Many of the examples in Chapter 4 are related to common questions sent in to the "Maxima Mailing List".</p>
+
+<h2><a name="mbe05"></a><a href="#mbe">Chapter 5: 2D Plots and Graphics using qdraw</a></h2>
+
+<p>Chapter 5 presents many examples which use qdraw.mac, an interface to Maxima's draw2d function. qdraw(...) provides much quicker access to many features of draw2d, with default plot properties of interest to users from the physical sciences and engineering.</p>
+
+<ol>
+  <li><a href="files/mbe5qdraw.pdf"  >mbe5qdraw.pdf  </a> &mdash; Jan. 29, 2009 , Maxima 5.17.1 , 52 pages                                           </li>
+  <li><a href="files/mbe5qdraw.tex"  >mbe5qdraw.tex  </a> &mdash; Jan. 29, 2009                 , Latex code file                                    </li>
+  <li><a href="files/qdraw.mac"      >qdraw.mac      </a> &mdash; Jan. 29, 2009 , Maxima 5.17.1 , A Graphics Interface to draw2d                     </li>
+  <li><a href="files/qdrawsyntax.txt">qdrawsyntax.txt</a> &mdash; Dec.  8, 2008 , Maxima 5.16   , Summary of Syntax                                  </li>
+  <li><a href="files/qdrawcode.txt"  >qdrawcode.txt  </a> &mdash; Jan. 29, 2009 , Maxima 5.17.1 , Copy and paste code                                </li>
+  <li><a href="files/mbe5batch.mac"  >mbe5batch.mac  </a> &mdash; Jan. 29, 2009 , Maxima 5.17.1 , Use batch (mbe5batch) to see all graphics examples </li>
+  <li><a href="files/doplot1.mac"    >doplot1.mac    </a> &mdash; Jan. 29, 2009 , Maxima 5.17.1 , Vertical Lines example                             </li>
+  <li><a href="files/doplot2.mac"    >doplot2.mac    </a> &mdash; Jan. 29, 2009 , Maxima 5.17.1 , Eighteen Triangles example                         </li>
+  <li><a href="files/fit1.dat"       >fit1.dat       </a> &mdash; Jun. 16, 2008 , Maxima 5.15   , Data file                                          </li>
+  <li><a href="files/fit2.dat"       >fit2.dat       </a> &mdash; Jun. 16, 2008 , Maxima 5.15   , Data file                                          </li>
+</ol>
+
+<h3>Chapter 5 Topics</h3>
+
+<ol>
+  <li>Quick Plots for Explicit Functions: ex(...)</li>
+  <li>Quick Plots for Implicit Functions: imp(...)</li>
+  <li>Contour Plots with contour(...)</li>
+  <li>Density Plots with qdensity(...)</li>
+  <li>Explicit Plots with Greater Control: ex1(...)</li>
+  <li>Explicit Plots with ex1(...) and Log Scaled Axes</li>
+  <li>Data Plots with Error Bars: pts(...) and errorbars(...)</li>
+  <li>Implicit Plots with Greater Control: imp1(...)</li>
+  <li>Parametric Plots with para(...)</li>
+  <li>Polar Plots with polar(...)</li>
+  <li>Geometric Figures: line(...)</li>
+  <li>Geometric Figures: rect(...)</li>
+  <li>Geometric Figures: poly(...)</li>
+  <li>Geometric Figures: circle(...) and ellipse(...)</li>
+  <li>Geometric Figures: vector(..)</li>
+  <li>Geometric Figures: arrowhead(..)</li>
+  <li>Labels with Greek Letters</li>
+  <li>Even More with more(...)</li>
+  <li>Programming Homework Exercises</li>
+</ol>
+
+<p>The text file qdraw.mac is free software: you can redistribute it and/or modify it under the terms of the GNU GENERAL PUBLIC LICENSE, Version 2, June 1991, as published by the Free Software Foundation. For more information see the license information at the top of the file.</p>
+
+<h2><a name="mbe06"></a><a href="#mbe">Chapter 6: Differential Calculus</a></h2>
+
+<ol>
+  <li><a href="files/mbe6calc1.pdf">mbe6calc1.pdf</a> &mdash; July 21, 2008 , Maxima 5.15 , 57 pages                             </li>
+  <li><a href="files/mbe6calc1.tex">mbe6calc1.tex</a> &mdash; July 21, 2008               , Latex code file                      </li>
+  <li><a href="files/vcalc.mac"    >vcalc.mac    </a> &mdash; July 19, 2008 , Maxima 5.15 , A Maxima package for Vector Calculus </li>
+  <li><a href="files/vcalcdem.mac" >vcalcdem.mac </a> &mdash; July 19, 2008 , Maxima 5.15 , Batch File Illustrating vcalc.mac    </li>
+  <li><a href="files/calc1code.txt">calc1code.txt</a> &mdash; July 21, 2008 , Maxima 5.15 , Copy and paste code                  </li>
+  <li><a href="files/cylinder.mac" >cylinder.mac </a> &mdash; July 19, 2008 , Maxima 5.15 , Cylindrical Coordinates              </li>
+  <li><a href="files/sphere.mac"   >sphere.mac   </a> &mdash; July 19, 2008 , Maxima 5.15 , Spherical Polar Coordinates          </li>
+</ol>
+
+<h3>Chapter 6 Topics</h3>
+
+<ol>
+  <li>Differentiation of Explicit Functions: diff(..) and Total Differential</li>
+  <li>Critical and Inflection Points of a Curve Defined by an Explicit Function</li>
+  <li>Tangent and Normal of a Point of a Curve Defined by an Explicit Function</li>
+  <li>Maxima and Minima of a Function of Two Variables</li>
+  <li>Tangent and Normal of a Point of a Curve Defined by an Implicit Function</li>
+  <li>Limit Examples using Maxima's limit(...) Function</li>
+  <li>Taylor Series Expansions using taylor(...)</li>
+  <li>Vector Calculus Calculations and Derivations using vcalc.mac</li>
+  <li>Maxima Derivation of Vector Calculus Formulas in Cylindrical Coordinates</li>
+  <li>Maxima Derivation of Vector Calculus Formulas in Spherical Polar Coordinates</li>
+</ol>
+
+<p>The text file vcalc.mac is free software: you can redistribute it and/or modify it under the terms of the GNU GENERAL PUBLIC LICENSE, Version 2, June 1991, as published by the Free Software Foundation. For more information see the license information at the top of the file.</p>
+
+<h2><a name="mbe07"></a><a href="#mbe">Chapter 7: Symbolic Integration</a></h2>
+
+<ol>
+  <li><a href="files/mbe7sint.pdf">mbe7sint.pdf</a> &mdash; Sep. 16, 2010 , Maxima 5.18.1 , 35 pages            </li>
+  <li><a href="files/mbe7sint.tex">mbe7sint.tex</a> &mdash; Sep. 16, 2010                 , Latex code file     </li>
+  <li><a href="files/mbe7code.txt">mbe7code.txt</a> &mdash; Apr. 29, 2009 , Maxima 5.18.1 , Copy and paste code </li>
+</ol>
+
+<h3>Chapter 7 Topics</h3>
+
+<ol>
+  <li>Examples of Use of integrate</li>
+  <li>Piecewise Defined Functions</li>
+  <li>Area Between Curves Examples</li>
+  <li>Arc Length of an Ellipse</li>
+  <li>Double Integrals : Area and Moment of Inertia of an Elliptical Laminate</li>
+  <li>Triple Integrals: Volume and Moment of Inertia of a Solid Ellipsoid</li>
+  <li>Derivative of a Definite Integral with respect to a Parameter</li>
+  <li>Integration by Parts</li>
+  <li>Change of Variables</li>
+</ol>
+
+<h2><a name="mbe08"></a><a href="#mbe">Chapter 8: Numerical Integration</a></h2>
+
+<p>The newly revised chapter 8 includes new package functions nint, quad, mdefint, and ndefint for 1d and 2d numerical integration, available after loading the file nint.mac.</p>
+<p>The new package loaded by apnint.mac (nint.mac should be loaded first) makes available two functions for arbitrary precision quadrature in 1 dimension, apnint and apquad.</p>
+
+<p>For routine 1d numerical integration (quadrature), you can simply use the syntax:<br>
+
+<pre>nint (expr,x,x1,x2)</pre>
+
+<p>where expr can be either real or complex. The new function nint will first try the Maxima function integrate (if feasible), and if not successful, will use the Maxima quadpack functions.</p>
+
+<p>You can force Maxima to just use the quadpack functions with the syntax:</p>
+
+<pre>quad (expr,x,x1,x2)</pre>
+
+<p>again with expr being either real or complex.</p>
+
+<p>You can also force Maxima to try integrate (if nint avoids integrate for a given integrand-domain) by using the syntax:</p>
+
+<pre>mdefint (expr,x,x1,x2)</pre>
+
+<p>for a symbolic answer, and</p>
+
+<pre>ndefint (expr,x,x1,x2)</pre>
+
+<p>for a numerical answer calculated from the symbolic integrate answer using bigfloat methods with 32 digit precision.</p>
+
+<p>The 2d syntax is similar to Mathematica's:</p>
+
+<pre>nint(f,[x,x1,x2],[y,y1,y2])</pre>
+
+<p>is an approximate numerical value of</p>
+
+<pre>integrate( integrate (f,y,y1,y2), x,x1,x2)</pre>
+
+<p>A number of optional arguments can be used to control or request the quadpack method to be used.</p>
+
+<p>Arbitrary precision quadrature using apnint has the syntax</p>
+
+<pre>apnint(expr,x,x1,x2,rp,wp)</pre>
+
+<p>in which rp is the requested precision of the answer, and wp is the working precision. The function apnint first tries using integrate, if feasible, and if not successful, uses one of two numerical methods we discuss in Ch.9.</p>
+
+<p>The function apquad has the same syntax:</p>
+
+<pre>apquad(expr,x,x1,x2,rp,wp)</pre>
+
+<p>and avoids integrate, forcing use of one of two possible numerical methods.</p>
+
+<p>In both of these arbitrary precision cases, if the domain is non-finite, then x1 should be finite and x2 should be the symbol inf.</p>
+
+<ol>
+  <li><a href="files/mbe8nint.zip"   >mbe8nint.zip   </a> &mdash; Dec. 14, 2013                 , zip    code of all Ch. 8 files </li>
+  <li><a href="files/mbe8nint.tar.gz">mbe8nint.tar.gz</a> &mdash; Dec. 14, 2013                 , tar.gz code of all Ch. 8 files </li>
+  <li><a href="files/mbe8nint.pdf"   >mbe8nint.pdf   </a> &mdash; Nov. 16, 2012 , Maxima 5.28.0 , 35 page pdf file               </li>
+  <li><a href="files/mbe8nint.tex"   >mbe8nint.tex   </a> &mdash; Nov. 16, 2012 , Maxima 5.28.0 , Latex code file                </li>
+  <li><a href="files/mbe8code.txt"   >mbe8code.txt   </a> &mdash; Nov. 16, 2012 , Maxima 5.28.0 , Copy and paste code            </li>
+  <li><a href="files/nint.mac"       >nint.mac       </a> &mdash; Dec. 14, 2013 , Maxima 5.28.0                                  </li>
+  <li><a href="files/nint.lisp"      >nint.lisp      </a> &mdash; Oct. 31, 2012 , Maxima 5.28.0                                  </li>
+  <li><a href="files/mydefint.mac"   >mydefint.mac   </a> &mdash; Oct. 31, 2012 , Maxima 5.28.0                                  </li>
+  <li><a href="files/quad1d.mac"     >quad1d.mac     </a> &mdash; Oct. 31, 2012 , Maxima 5.28.0                                  </li>
+  <li><a href="files/quad2d.mac"     >quad2d.mac     </a> &mdash; Oct. 31, 2012 , Maxima 5.28.0                                  </li>
+  <li><a href="files/quad_util.mac"  >quad_util.mac  </a> &mdash; Oct. 31, 2012 , Maxima 5.28.0                                  </li>
+  <li><a href="files/nint_test.mac"  >nint_test.mac  </a> &mdash; Oct. 31, 2012 , Maxima 5.28.0                                  </li>
+  <li><a href="files/apnint.mac"     >apnint.mac     </a> &mdash; Dec. 14, 2013 , Maxima 5.28.0                                  </li>
+  <li><a href="files/dequad.mac"     >dequad.mac     </a> &mdash; Nov. 16, 2012 , Maxima 5.28.0                                  </li>
+  <li><a href="files/tsquad.mac"     >tsquad.mac     </a> &mdash; Dec. 14, 2013 , Maxima 5.28.0                                  </li>
+</ol>
+
+<h3>Chapter 8 Topics</h3>
+
+<ol>
+  <li>Using nint and quad for One or Two Dimensional Quadrature</li>
+  <li>Using apnint and apquad for Arbitrary Precision Quadrature</li>
+  <li>Using the Wolfram Alpha Web Site for Integrals</li>
+  <li>Direct Quadpack Use of quad_qags, quad_qag, and quad_qagi</li>
+  <li>Sharper Tools: Use of quad_qagp, quad_qawo, quad_qaws, quad_qawc, and quad_qawf</li>
+  <li>Numerical Integration Decision Trees</li>
+</ol>
+
+<h2><a name="mbe09"></a><a href="#mbe">Chapter 9: Bigfloats and Arbitrary Precision Quadrature</a></h2>
+
+<p>A valuable feature of a computer algebra system is the ability to easily do arithmetic to "arbitrary" precision. This chapter presents three powerful methods of arbitrary precision quadrature, including examples and test integrals.</p>
+
+<ol>
+  <li><a href="files/mbe9bfloat.pdf">mbe9bfloat.pdf</a> &mdash; Feb.  3, 2011 , Maxima 5.18.1 and 5.23.2 , 33 pages            </li>
+  <li><a href="files/mbe9bfloat.tex">mbe9bfloat.tex</a> &mdash; Feb.  3, 2011                            , Latex code file     </li>
+  <li><a href="files/mbe9code.txt"  >mbe9code.txt  </a> &mdash; Feb.  3, 2011 , Maxima 5.18.1 and 5.23.2 , Copy and paste code </li>
+  <li><a href="files/fdf.mac"       >fdf.mac       </a> &mdash; Apr. 29, 2009 , Maxima 5.18.1                                  </li>
+  <li><a href="files/qbromberg.mac" >qbromberg.mac </a> &mdash; Apr. 29, 2009 , Maxima 5.18.1                                  </li>
+  <li><a href="files/quad_de.mac"   >quad_de.mac   </a> &mdash; Apr. 29, 2009 , Maxima 5.18.1                                  </li>
+  <li><a href="files/quad_ts.mac"   >quad_ts.mac   </a> &mdash; Apr. 29, 2009 , Maxima 5.18.1                                  </li>
+  <li><a href="files/quad_gs.mac"   >quad_gs.mac   </a> &mdash; Apr. 29, 2009 , Maxima 5.18.1                                  </li>
+</ol>
+
+<h3>Chapter 9 Topics</h3>
+
+<ol>
+  <li>The Use of Bigfloat Numbers in Maxima,</li>
+  <li>Bigfloat Numbers Using bfloat, fpprec, and fpprintprec.</li>
+  <li>Using print and printf with Bigfloats,</li>
+  <li>Adding Bigfloats having Differing Precision,</li>
+  <li>Polynomial Roots Using bfallroots,</li>
+  <li>Bigfloat Number Gaps and Binary Arithmetic,</li>
+  <li>Effect of Floating Point Precision on Function Evaluation,</li>
+  <li>Arbitrary Precision Quadrature with Maxima,</li>
+  <li>Using bromberg for Arbitrary Precision Quadrature,</li>
+  <li>A Double Exponential Quadrature Method for a &lt;= x &lt; &infin;,</li>
+  <li>The tanh-sinh Quadrature Method for a &lt;= x &lt;= b,</li>
+  <li>The Gauss-Legendre Quadrature Method for a &lt;= x &lt;= b</li>
+</ol>
+
+<p><small>The section on the use of bfallroots was updated Feb. 10, 2011, and uses Maxima 5.23.2. The necessity of using  fpprec and ratepsilon settings which "match" is explored with a detailed example. The author is grateful to Michel Talon for feedback about the behavior of bfallroots.</small></p>
+<p>The text files fdf.mac, qbromberg.mac, quad_de.mac, quad_ts.mac, and quad_gs.mac are free software: you can redistribute them and/or modify them under the terms of the GNU GENERAL PUBLIC LICENSE, Version 2, June 1991, as published by the Free Software Foundation. For more information see the license information at the top of the files.</p>
+
+<h2><a name="mbe10"></a><a href="#mbe">Chapter 10: Fourier Series, Fourier and Laplace Transforms</a></h2>
+
+<ol>
+  <li><a href="files/mbe10fltrans.pdf">mbe10fltrans.pdf</a> &mdash; Sep. 16, 2010 , Maxima 5.18.1 , 38 pages            </li>
+  <li><a href="files/mbe10fltrans.tex">mbe10fltrans.tex</a> &mdash; Sep. 16, 2010                 , Latex code file     </li>
+  <li><a href="files/mbe10code.txt"   >mbe10code.txt   </a> &mdash; Apr. 29, 2009 , Maxima 5.18.1 , Copy and paste code </li>
+</ol>
+
+<h3>Chapter 10 Topics</h3>
+
+<ol>
+  <li>Fourier Series Expansion Examples,</li>
+  <li>Fourier Integral Transform Pair Examples,</li>
+  <li>Dirac Delta (Unit Impulse) Function Examples,</li>
+  <li>Laplace Transform Integral Examples,</li>
+  <li>Inverse Laplace Transform Examples and Residues</li>
+</ol>
+
+<h2><a name="mbe11"></a><a href="#mbe">Chapter 11: Fast Fourier Transform Tools</a></h2>
+
+<p>Chapter 11 and the software file qfft.mac have been revised and greatly simplified to allow use of the new simplified Maxima package fft.lisp, effective with Maxima ver. 5.19.0, August 2009. The latex code file is made available for the convenience of instructors who would like to incorporate parts of Ch. 11 in their class notes and handouts.</p>
+
+<ol>
+  <li><a href="files/mbe11fft.pdf" >mbe11fft.pdf </a> &mdash; Aug. 13, 2009 , Maxima 5.19.0 , Ch. 11, Fast Fourier Transform Tools, 28 pages </li>
+  <li><a href="files/mbe11fft.tex" >mbe11fft.tex </a> &mdash; Aug. 13, 2009 , Maxima 5.19.0 , Latex source code                              </li>
+  <li><a href="files/mbe11code.txt">mbe11code.txt</a> &mdash; Aug. 13, 2009 , Maxima 5.19.0 , Copy and paste code                            </li>
+  <li><a href="files/mbe11toc.txt" >mbe11toc.txt </a> &mdash; Aug. 13, 2009 , Maxima 5.19.0 , Table of Contents                              </li>
+  <li><a href="files/qfft.mac"     >qfft.mac     </a> &mdash; Aug. 13, 2009 , Maxima 5.19.0                                                  </li>
+</ol>
+
+<h3>Chapter 11 Topics</h3>
+
+<ol>
+  <li>FFT Spectrum of a Monochromatic Signal,</li>
+  <li>FFT Spectrum of a Sum of Two Monochromatic Signals,</li>
+  <li>FFT Spectrum of a Rectangular Wave,</li>
+  <li>FFT Spectrum Sidebands of a Tone Burst Before and After Filtering,</li>
+  <li>Cleaning a Noisy Signal using FFT Methods,</li>
+  <li>Basic Ideas of the Fast Fourier Transform,</li>
+  <li>Derivation of the Discrete Fourier Transform</li>
+</ol>
+
+<p>The text file qfft.mac is free software: you can redistribute it and/or modify it under the terms of the GNU GENERAL PUBLIC LICENSE, Version 2, June 1991, as published by the Free Software Foundation. For more information see the license information at the top of the file.</p>
+
+<h2><a name="mbe12"></a><a href="#mbe">Chapter 12: Dirac Algebra and Quantum Electrodynamics, Version 2</a></h2>
+
+<p>A Version 2 Maxima Dirac algebra package is demonstrated using examples from Quantum Electrodynamics. The file dirac2.mac loads the rest of the Dirac package files: simplifying-new.lisp, dgcon2.mac, dgtrace2.mac, dgeval2.mac, and dgmatrix2.mac. The file dgfunctions2.txt has an alphabetical list of the package functions. Eleven batch files carry out typical calculations.</p>
+<p>Separate sections of Ch. 12 are devoted to a review of high energy physics notation (which agrees with Peskin and Schroeder), trace and contraction theorems, to a review of covariant polarization 4-vectors for physical (external) photons, and to the use of simplifying-new.lisp.</p>
+<p>A 22 page introduction to typical uses, with examples given in an interactive session context, has been created to allow easier and quicker access to the syntax and abilities of the package.</p>
+<p>The Dirac package code has been rewritten and the code greatly simplified. The more complicated examples now run about 35% faster. A suite of test files has been added, and is available as either a zip file or a tar.gz file.</p>
+<p><small> The author is indebted to Maxima developer Barton Willis for his suggestion to use the recursive simplification lisp code simplifying.lisp, and for his advice in exploiting the power of that code.</small></p>
+
+<p>The following Windows zip file contains all Chapter 12 files (except the test suite), including the pdf.<br>
+      <a href="mbe12dirac2.zip"     >mbe12dirac2.zip     </a> &mdash; Apr. 15, 2011 , Maxima 5.23.2 , 488 KB</p>
+
+<p>The following tar.gz file contains all Ch. 12 files (except the test suite), including the pdf file.<br>
+      <a href="mbe12dirac2.tar.gz"  >mbe12dirac2.tar.gz  </a> &mdash; Nov.  2, 2012 , Maxima 5.23.2 , 479 KB</p>
+
+<ol>
+  <li><a href="files/mbe12dirac2.pdf"     >mbe12dirac2.pdf     </a> &mdash; Apr. 15, 2011 , Maxima 5.23.2 , Ch. 12, Dirac Algebra and Quantum Electrodynamics, 83 pages                    </li>
+  <li><a href="files/mbe12dirac2.tex"     >mbe12dirac2.tex     </a> &mdash; Apr.   , 20                   , Ch. 12 Latex code file                                                         </li>
+  <li><a href="files/simplifying-new.lisp">simplifying-new.lisp</a> &mdash; Apr. 15, 2011 , Maxima 5.23.2 , Recursive simplification code                                                  </li>
+  <li><a href="files/dirac2.mac"          >dirac2.mac          </a> &mdash; Apr. 15, 2011 , Maxima 5.23.2 , The Dirac package driver                                                       </li>
+  <li><a href="files/dgcon2.mac"          >dgcon2.mac          </a> &mdash; Apr. 15, 2011 , Maxima 5.23.2 , Symbolic contraction code                                                      </li>
+  <li><a href="files/dgtrace2.mac"        >dgtrace2.mac        </a> &mdash; Apr. 15, 2011 , Maxima 5.23.2 , Symbolic trace code                                                            </li>
+  <li><a href="files/dgeval2.mac"         >dgeval2.mac         </a> &mdash; Apr. 15, 2011 , Maxima 5.23.2 , Frame dependent code                                                           </li>
+  <li><a href="files/dgmatrix2.mac"       >dgmatrix2.mac       </a> &mdash; Apr. 15, 2011 , Maxima 5.23.2 , Explicit Dirac spinors and matrices                                            </li>
+  <li><a href="files/dgfunctions2.txt"    >dgfunctions2.txt    </a> &mdash; Apr. 15, 2011 , Maxima 5.23.2 , Alphabetical list of  the Dirac package functions                              </li>
+  <li><a href="files/bhabha1.mac"         >bhabha1.mac         </a> &mdash; Apr. 15, 2011 , Maxima 5.23.2 , High energy electron-positron scattering                                       </li>
+  <li><a href="files/bhabha2.mac"         >bhabha2.mac         </a> &mdash; Apr. 15, 2011 , Maxima 5.23.2 , Arbitrary energy electron-positron scattering                                  </li>
+  <li><a href="files/compton0.mac"        >compton0.mac        </a> &mdash; Apr. 15, 2011 , Maxima 5.23.2 , Photon plus scalar charged particle scattering                                 </li>
+  <li><a href="files/compton1.mac"        >compton1.mac        </a> &mdash; Apr. 15, 2011 , Maxima 5.23.2 , Photon plus lepton scattering                                                  </li>
+  <li><a href="files/moller0.mac"         >moller0.mac         </a> &mdash; Apr. 15, 2011 , Maxima 5.23.2 , Scalar plus scalar charged particle scattering                                 </li>
+  <li><a href="files/moller1.mac"         >moller1.mac         </a> &mdash; Apr. 15, 2011 , Maxima 5.23.2 , High energy limit of electron-electron scattering                              </li>
+  <li><a href="files/moller2.mac"         >moller2.mac         </a> &mdash; Apr. 15, 2011 , Maxima 5.23.2 , Arbitrary energy electron-electron scattering                                  </li>
+  <li><a href="files/moller3.mac"         >moller3.mac         </a> &mdash; Apr. 15, 2011 , Maxima 5.23.2 , Use of explicit matrix trace methods and symbolic trace methods for the
+                                                                                                            squared polarized amplitudes for arbitrary energy electron-electron scattering </li>
+  <li><a href="files/MSQcomp.mac"         >MSQcomp.mac         </a> &mdash; Apr. 15, 2011 , Maxima 5.23.2 , A function definition loaded by moller3.mac                                    </li>
+  <li><a href="files/pair1.mac"           >pair1.mac           </a> &mdash; Apr. 15, 2011 , Maxima 5.23.2 , Unpolarized two photon annihilation of an electron-positron pair               </li>
+  <li><a href="files/pair2.mac"           >pair2.mac           </a> &mdash; Apr. 15, 2011 , Maxima 5.23.2 , Polarized two photon annihilation of an electron-positron pair                 </li>
+  <li><a href="files/photon1.mac"         >photon1.mac         </a> &mdash; Apr. 15, 2011 , Maxima 5.23.2 , Sum identities for photon polarization 3-vectors                               </li>
+  <li><a href="files/dg2test.zip"         >dgtest2.zip         </a> &mdash; Apr. 15, 2011 , Maxima 5.23.2 , test suite zip    file                                                         </li>
+  <li><a href="files/dg2test.tar.gz"      >dgtest2.tar.gz      </a> &mdash; Nov.  2, 2012 , Maxima 5.23.2 , test suite tar.gz file                                                         </li>
+</ol>
+
+<p>A file which is not in the zip or tar.gz files is a lisp file written by Leo Butler which allows Windows users to avoid a bug in using the Maxima function timedate. See Sec. 12.3 for a discussion of the use of <a href="new-timedate.lisp">new-timedate.lisp</a>.</p>
+<p>Three independent methods of calculation are provided by the Dirac package.</p>
+
+<ol>
+  <li>The symbolic methods are available for the calculation of either unpolarized differential cross sections or polarized differential cross sections.The symbolic methods allow unpolarized differential cross sections to be first  expressed in an arbitrary frame in terms of the Mandelstam variables s, t, and u.</li>
+  <li>An alternative path (but frame dependent) to either unpolarized or polarized differential cross sections is the use of explicit Dirac matrices   (we use the same conventions as Peskin and Schroeder) and explicit matrix trace and contractions on Lorentz indices.</li>
+  <li>The third path is the use of explcit Dirac spinors and matrices to first calculate all possible polarized  amplitudes (ie.,for various helicity choices) and then the sum of the squares reproduces the unpolarized results.</li>
+</ol>
+
+<p>The Dirac package files are free software: you can redistribute them and/or modify them under the terms of the GNU GENERAL PUBLIC LICENSE, Version 2, June 1991, as published by the Free Software Foundation. For more information see the license information at the top of the file.</p>
+
+<h2><a name="mbe-a"></a><a href="#mbe">Quark Gluon Hard Scattering Processes</a></h2>
+
+<p>A simple tree level QCD hard scattering calculation. The batch file includes references and a copy of the batch file run. The version 2 Dirac package (dirac2.mac) needs to be loaded, and in addition the file qcd1.mac needs to be loaded as well. The latter file contains explicit matrix definitions of the eight SU(3) group 3 x 3 color matrices T[a], a = 1,2,..,8, and also calculates the antisymmetric gauge group structure contants f[a,b,c], and the symmetric structure constants d[a,b,c] for use in calculations.</p>
+
+<ol>
+  <li><a href="files/qcd1.mac"       >qcd1.mac       </a> &mdash;                                 Color matrices and structure constants    </li>
+  <li><a href="files/qq-qq1.mac"     >qq-qq1.mac     </a> &mdash; Apr. 30, 2011 , Maxima 5.24.0 , Quark-quark scattering via gluon exchange </li>
+</ol>
+
+<h2><a name="mbe-b"></a><a href="#mbe">A Clebsch-Gordan Coefficient Package for Maxima</a></h2>
+
+<p>Contains (not very efficient) Maxima code for Wigner vector coupling coefficients (Clebsch-Gordan coefficients) <code>cj(j1,j2,j3,m1,m2,m3)</code> and the simply related Wigner 3j coefficients <code>threej(j1,j2,j3,m1,m2,m3)</code>, both for explicit integer and half-integer arguments only.</p>
+
+<ol>
+  <li><a href="files/clebsch.mac"    >clebsch.mac    </a> &mdash; Oct. 22, 2010 , Maxima 5.21.1</li>
+</ol>
+
+<p>The text file clebsch.mac is free software: you can redistribute it and/or modify it under the terms of the GNU GENERAL PUBLIC LICENSE, Version 2, June 1991, as published by the Free Software Foundation. For more information see the license information at the top of the file.</p>
+
+<h2><a name="mbe-c"></a><a href="#mbe">A Simple Maxima Lagrangian Mechanics Package</a></h2>
+
+<ol>
+
+  <li>This is a batch file which contains some simple examples of deriving the second order equations of motion for a system described by a Lagrangian function of generalized coordinates and velocities and for which no constraint equations are needed. The results from the batch file run are in a comment at the end of lag1.mac.<br>
+      <a href="files/lag1.mac"       >lag1.mac       </a> &mdash; Oct. 26, 2010 , Maxima 5.22.1</li>
+
+  <li>This Maxima code file contains code which is automatically loaded in by lag1.mac.<br>
+      <a href="files/lag2.mac"       >lag2.mac       </a> &mdash; Oct. 26, 2010 , Maxima 5.22.1</li>
+
+</ol>
+
+<p>The text files lag1.mac and lag2.mac are free software: you can redistribute them and/or modify them under the terms of the GNU GENERAL PUBLIC LICENSE, Version 2, June 1991, as published by the Free Software Foundation. For more information see the license information at the top of the file.</p>
+
+<h2><a name="mbe-d"></a><a href="#mbe">Symbolic Pauli Matrix Commutator Expansions</a></h2>
+
+<ol>
+
+  <li>This code file loads commutators.mac and uses tellsimpafter methods to complete the symbolic expansion of Pauli matrices. Also included is code for comparing explicit matrix calculations of commutators with the symbolic results. Note that the code uses the convention that sig[k], for k = 1,2,3, (lower case first letter) represents the symbolic Pauli matrix, and Sig[k], for k = 1,2,3, (upper case first letter) represents the explicit Pauli matrix.<br>
+      <a href="files/pauli1.mac"     >pauli1.mac     </a> &mdash; Nov. 29, 2010 , Maxima 5.22.1 , at the end are examples of use.</li>
+
+  <li>This code file loads commutators.mac and uses defrule methods to complete the symbolic expansion of Pauli matrices.<br>
+      <a href="files/pauli2.mac"     >pauli2.mac     </a> &mdash; Nov. 29, 2010 , Maxima 5.22.1 , at the end are examples of use.</li>
+
+  <li>This Maxima code file, written by Maxima coordinator Robert Dodier, first creates a new property 'bilinear', which can then be used in declare(comm,bilinear) declarations. The file then uses defrule methods to create rules for the extraction of scalars, numbers, and factors of %i to be removed from 'comm' arguments and rules for the basic product rule expansion of a commutator of two operators or matrices.<br>
+      <a href="files/commutators.mac">commutators.mac</a> &mdash; Nov. 29, 2010 , Maxima 5.22.1 , at the end are examples of use.</li>
+
+</ol>
+
+<p>The text files commutators.mac, pauli1.mac, and pauli2.mac are free software: you can redistribute them and/or modify them under the terms of the GNU GENERAL PUBLIC LICENSE as published by the Free Software Foundation.</p>
+
+<hr>
+
+<p>Ted Woollett was active in teaching and research for 35 years (beginning in 1966) as a faculty  member in the Physics and Astronomy Department at California State University, Long Beach.  His research included peer reviewed work in theoretical plasma physics, non-equilibrium thermodynamics, theoretical xray spectra, high energy nuclear physics, and physics & society issues.</p>
+<p>Over the course of his service in teaching, Ted created a freshman physics course "Man and Energy" which dealt with the physics side of societal issues related to energy use and the environment. This popular course offered during the 1970's used a different text each semester the course was taught, and even included one semester devoted to physics of the health implications of radiation.</p>
+<p>Physics and astronomy courses taught to undergraduates and graduate students included Elementary Particle Physics Phenomenology, Special Relativity, General Relativity, Introduction to Astrophysics, Computational Physics, Plasma Physics, Statistical Physics, Thermodynamics, Electricity and Magnetism, Quantum Mechanics, Classical Mechanics, and Mathematical Methods of Physics.</p>
+<p>Ted and Kathleen are now living in San Luis Obispo, on the Central Coast of California. Monthly social "highlights" are the Morro Bay AAUW dine-out group and the Unitarian-Universalist bookclub, "The Litwits".</p>
+<p>His contact email address is now: <a href="mailto:woollett@charter.net">woollett@charter.net</a></p>
+<p><a href="http://www.csulb.edu/depts/physics/">CSULB PHYSICS DEPT. HOME</a></p>
+
+</body>
+
+</html>

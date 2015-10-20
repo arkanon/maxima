@@ -1,0 +1,1989 @@
+% e. woollett
+%  2nd version 2012
+%  1st version july 08 - july 09
+% file nint.tex this is new ch. 8
+% things to add: 
+%Also, there are functions float_approx_equal and bfloat_approx_equal.
+%The default for float_approx_equal_tolerance is about 8 * unit roundoff.
+%
+%(%i1) float_approx_equal_tolerance;
+%(%o1) 8.881784197001254E-16
+%
+%(%i2) float_approx_equal(float(2/3), 0.66666666666666666666666666666);
+%(%o2) true
+%
+%(%i4) float_approx_equal(float(2/3), 0.66666666666);
+%(%o4) false
+%
+%Source code comment:
+%
+%;; Return true if $float converts both a and b to floats and
+%;; |a - b| <= float_approx_equal_tolerance * min(|a|, |b|).
+%;; In all other cases, return false.
+%
+%
+%Barton
+% edit with Notepad++, then load into LED for latexing
+\documentclass[12pt]{article}
+\usepackage[dvips,top=1.5cm,left=1.5cm,right=1.5cm,foot=1cm,bottom=1.5cm]{geometry}
+\usepackage{times,amsmath,amsbsy,graphicx,fancyvrb,url}
+\usepackage[usenames]{color}
+%\definecolor{MyDarkBlue}{rgb}{0,0.08,0.45}
+\definecolor{mdb}{rgb}{0.1,0,0.55}
+\newcommand{\tcdb}{\textcolor{mdb}}
+\newcommand{\tcbr}{\textcolor{BrickRed}}
+\newcommand{\tcb}{\textcolor{blue}}
+\newcommand{\tcr}{\textcolor{red}}
+\urldef\tedhome\url{ http://www.csulb.edu/~woollett/  }
+\urldef\tedmail\url{ woollett@charter.net}
+%1.  this is for maxima code: red framed bold, footnotesize 
+\DefineVerbatimEnvironment%
+   {myVerbatim}%
+   {Verbatim}%
+   {fontfamily=courier,fontseries=b,fontsize=\footnotesize ,frame=single,rulecolor=\color{BrickRed}}
+\DefineVerbatimEnvironment%
+   {myVerbatim1}%
+   {Verbatim}%
+   {fontfamily=courier,fontseries=b,fontsize=\scriptsize ,frame=single,rulecolor=\color{BrickRed}}
+%2.  this is for blue framed bold 
+\DefineVerbatimEnvironment%
+   {myVerbatim2}%
+   {Verbatim}%
+   {fontfamily=courier,fontseries=b,frame=single,rulecolor=\color{blue}}
+\DefineVerbatimEnvironment%
+   {myVerbatim2s}%
+   {Verbatim}%
+   {fontfamily=courier,fontseries=b,fontsize=\small,frame=single,rulecolor=\color{blue}}
+\DefineVerbatimEnvironment%
+   {myVerbatim2f}%
+   {Verbatim}%
+   {fontfamily=courier,fontseries=b,fontsize=\footnotesize,frame=single,rulecolor=\color{blue}}
+% 3.  this is for black framed  bold
+\DefineVerbatimEnvironment%
+   {myVerbatim3}%
+   {Verbatim}%
+   {fontfamily= courier, fontseries=b, frame=single}
+% 4.  this is for no frame bold
+\DefineVerbatimEnvironment%
+   {myVerbatim4}%
+   {Verbatim}%
+   {fontfamily=courier, fontseries=b}
+% 6.  for defaults use usual verbatim
+\newcommand{\mv}{\Verb[fontfamily=courier,fontseries=b]}
+\newcommand{\mvs}{\Verb[fontfamily=courier,fontseries=b,fontsize=\small]}
+\newcommand{\mvf}{\Verb[fontfamily=courier,fontseries=b,fontsize=\footnotesize]}
+
+\renewcommand{\thefootnote}{\ensuremath{\fnsymbol{footnote}}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%   title page
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\title{  Maxima by Example:\\ Ch.8: Numerical Integration 
+            \thanks{This version uses \textbf{Maxima 5.28.0}. This is a live
+            document. Check \; \textbf{ \tedhome } \; for the latest version of these notes. Send comments and
+			 suggestions to \textbf{\tedmail} } }
+
+
+\author{ Edwin L. Woollett}
+\date{\today}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%          document
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+%\footnotesize
+%\small
+\maketitle
+\tableofcontents
+\numberwithin{equation}{section}
+\newpage
+\subsubsection*{Preface}
+\begin{myVerbatim2} 
+COPYING AND DISTRIBUTION POLICY    
+This document is part of a series of notes titled
+"Maxima by Example" and is made available
+via the author's webpage http://www.csulb.edu/~woollett/
+to aid new users of the Maxima computer algebra system.	
+	
+NON-PROFIT PRINTING AND DISTRIBUTION IS PERMITTED.
+	
+You may make copies of this document and distribute them
+to others as long as you charge no more than the costs of printing.	
+
+These notes (with some modifications) will be published in book form
+eventually in an arrangement which will continue
+to allow unlimited free download of the pdf files as well as the option
+of ordering a low cost paperbound version of these notes.
+\end{myVerbatim2}	
+\smallskip
+\noindent \tcbr{Feedback from readers is the best way for this series of notes
+  to become more helpful to new users of Maxima}.
+\tcdb{\emph{All} comments and suggestions for improvements will be appreciated and
+  carefully considered}.
+\smallskip
+\begin{myVerbatim2s}
+The Maxima session transcripts were generated using the Xmaxima 
+graphics interface on a Windows XP computer, and copied into 
+a fancy verbatim environment in a latex file which uses the
+fancyvrb and color packages.
+\end{myVerbatim2s}  
+\smallskip
+\begin{myVerbatim2s}
+  Maxima, a Computer Algebra System.
+  Some numerical results depend on the Lisp version used.
+  This chapter uses Version 5.28.0 (2012) using Lisp GNU 
+  Common Lisp (GCL) GCL 2.6.8 (aka GCL).
+  http://maxima.sourceforge.net/
+\end{myVerbatim2s}
+The author would like to thank the Maxima developers for their friendly help via 
+  the Maxima mailing list. Richard Fateman provided early encouragement and
+  advice. Raymond Toy, Stavros Macrakis, and Barton Willis have each
+  contributed importantly to the evolution of the code in the \mv|nint| package.\\
+  
+\noindent The present \mv|nint| and \mv|apnint| packages are a work in progress, partially dictated by
+the progress in Maxima special function float and bfloat values. The new Ch. 8 functions
+\mv|apnint| and \mv|apquad| are the first step in providing quadrature results which
+attempt to satisfy user requested precision (for one dimensional quadrature).
+\newpage
+\setcounter{section}{8}
+\pagestyle{headings}
+\subsection{  Introduction}
+Chapter 8 on numerical integration (quadrature) is divided into eight sections.\\
+
+\noindent The syntax of the functions \mv|nint| and \mv|quad| is exactly the
+same (\mv|quad| is used to force use of Quadpack code) and this syntax is 
+introduced with a few examples.
+These functions are available once you load our \mv|nint| package, and they provide an interface to
+Maxima's \mv|integrate| function and the Quadpack functions for numerical quadrature in one
+and two dimensions.\\
+
+\noindent When you use \mv|nint|, an answer is first sought using \mv|integrate| (unless the
+integrand is a multiple-valued function or otherwise potentially dangerous) and 
+only if \mv|integrate| does not succeed is Quadpack resorted to.\\
+
+\noindent The new package functions, \mv|apnint| and \mv|apquad|,
+ available if you both load the \mv|nint.mac| package and then load
+ the \mv|apnint.mac| package (see examples below), allow the user to
+  request quadrature results with more digits of precision (for one-dimensional
+  quadrature)  than is returned by  \mv|nint| and \mv|quad|.
+Several examples of the use of these functions is given.\\
+
+\noindent We then discuss the most useful Quadpack functions for direct use, their syntax and
+examples of direct use.\\
+
+\noindent We then discuss the less often used Quadpack functions which may occasionally
+be useful.\\
+
+\noindent Finally we present a ``decision tree'' for
+  one dimensional quadrature using the Quadpack functions, first for a finite
+  integration interval, and then for a non-finite integration interval.\\
+
+\noindent In Chapter 9, we will discuss bigfloats and details of using Maxima for high
+  precision quadrature, parts of which are incorporated into the new Ch. 8 functions
+  \mv|apnint| and \mv|apquad|.
+Chapter 10 covers the calculation of Fourier series coefficients and both 
+  Fourier transform and Laplace transform type integrals.  
+Chapter 11  presents tools for the use of fast Fourier
+  transforms with examples of use.\\
+  
+\noindent If you are new to Maxima, check out Ch. 1 of Maxima by Example, and
+  also take a look at the web page:
+\begin{myVerbatim2}
+  http://mathscitech.org/articles/maxima
+\end{myVerbatim2}
+as well as the ``10 minute tutorial'':
+\begin{myVerbatim2}
+http://math-blog.com/2007/06/04/
+         a-10-minute-tutorial-for-solving-math-problems-with-maxima/
+\end{myVerbatim2}
+and the Harvard Math web page:
+\begin{myVerbatim2}
+http://www.math.harvard.edu/computing/maxima/
+\end{myVerbatim2}
+\subsection{Using \textbf{nint} and \textbf{quad} for One or Two Dimensional Quadrature}
+\subsubsection{Loading the \textbf{nint} Package}
+Maxima will be ready to use the \mv|nint| package once you have issued a
+  \mv|load| command such as \mv|load(nint)| (if you have set up your \mv|maxima.init|
+  file as suggested in Ch. 1), or, using a complete path, as in\\
+  \mv|load("c:/work2/nint.mac")|.
+\begin{myVerbatim}
+(%i1) load(nint);
+(%o1) "c:/work2/nint.mac"
+\end{myVerbatim}
+The files that are loaded are \mv|nint.mac|, \mv|nint.lisp|, \mv|quad_util.mac|,
+  \mv|mydefint.mac|, \mv|quad1d.mac|, and \mv|quad2d.mac|. 
+Global parameters which are set during this load are:
+  \mv|display2d:false|,\\
+  \mv|ratprint:false|, \mv|domain:complex|,  and \mv|lognegint:true|.
+\subsubsection{\textbf{nint} and \textbf{quad} Syntax}
+Here is a summary of the  syntax for either \mv|nint| or \mv|quad|.\\
+
+\noindent We use \mv|var| for the variable of integration, and \mv|a| and \mv|b|
+  for the range limits in the 1d examples here (naturally, you can use
+  any symbol for the variable of integration, as long as the supplied
+  expression \mv|expr| is a function of that variable.\\
+  
+\noindent  For the 2d syntax examples, we assume \mv|expr| is a
+  function of \mv|x| and \mv|y|, with \mv|x1| and \mv|x2| the
+  range limits for the \mv|x| variable, and with \mv|y1| and
+  \mv|y2| the range limits for the \mv|y| variable.\\
+  
+\noindent Again, you can use any symbols for the variables of integration.\\
+  
+\noindent The range limit parameters are either real numbers or
+\mv|inf| or \mv|minf|.
+\subsubsection*{1D INTEGRAL SYNTAX}
+To first try integrate with a fallback to quadpack:
+\begin{myVerbatim2}
+        nint ([expr],var,a, b [options])
+\end{myVerbatim2}
+ or, to force use of quadpack:
+\begin{myVerbatim2}
+        quad ([expr],var,a, b [options])
+\end{myVerbatim2}
+The options: \mv|strong_osc|, \mv|singular|, \mv|principal_val(v0)|,
+         \mv|points(x1,x2,...)|, \mv|real|,\\
+		 \mv|imaginary|, and \mv|complex| are
+         recognised for one dimensional integrals and are used
+		 to decide what quadpack routine to use and how.\\
+		 
+\noindent Before calling the quadpack routines,
+		\mv|nint| (or \mv|quad|) expends some effort in trying to confirm that
+        the integrand is either real or pure imaginary. If
+        \mv|nint| (or \mv|quad|) cannot assume the integrand is either real or
+        pure imaginary (using a series of tests), \mv|nint| (or \mv|quad|)
+        proceeds to work with the real and imaginary parts
+        separately. Although it is never necessary to use the
+		options \mv|real|, \mv|imaginary|, or \mv|complex|, for a complicated
+		integrand some time may be saved if the relevant option
+		is included (thus avoiding the time for the tests). Of course,
+		if you include the option \mv|real|, you should be sure the 
+		integrand evaluates to a real number over the whole domain of
+		integration!\\
+		
+\noindent The option \mv|strong_osc| forces
+        use of \mv|quad_qag| if integrate does not succeed.
+        The \mv|strong_osc| keyword should only
+        be used for a finite interval of integration.\\
+		
+\noindent The option \mv|singular| forces use of \mv|quad_qags| if
+		integrate does not succeed; should only be used
+		for a finite interval of integration.\\
+        
+\noindent The option \mv|principal_val(v0)| assumes that
+        \mv|expr| has the form \mv|g(var)/(var - v0)|, and requests
+        that the quadpack routine \mv|quad_qawc| be used for
+        a numerical principal value evaluation (if
+        integrate is not used or is not successful).\\
+        
+\noindent The option \mv|points(x1,x2,..)| forces use of
+        \mv|quad_qagp| if \mv|integrate| is not used
+        or is not successful. \mv|quad_qagp| gives special
+        treatment to the supplied points, where the
+        integrand is assumed to have singular behavior of
+        some type. The supplied points should be entirely
+        inside the range of integration.		
+\begin{myVerbatim2}
+   1d examples ( in each you can use quad instead of nint,
+		    which forces use of quadpack routines ):
+        
+        nint (expr,var,a,b)  
+        nint (expr,var,a,b,real)
+        nint (expr,var,a,b,imaginary)
+        nint (expr,var,a,b,complex)
+
+        nint (expr,var,a,b,strong_osc)
+        nint (expr,var,a,b,strong_osc,real)
+        nint (expr,var,a,b,strong_osc,imaginary)
+        nint (expr,var,a,b,strong_osc,complex)
+
+        nint (expr,var,a,b,singular)
+        nint (expr,var,a,b,singular,real)
+        nint (expr,var,a,b,singular,imaginary)
+        nint (expr,var,a,b,singular,complex)
+        
+        nint (expr,var,a,b,principal_val(v0))
+		   where v0 evaluates to a number and
+		    a < v0 < b.
+        nint (expr,var,a,b,principal_val(v0),real)
+        nint (expr,var,a,b,principal_val(v0),imaginary)
+        nint (expr,var,a,b,principal_val(v0),complex)
+		
+        nint (expr,var,a,b, points(x1,x2,...))
+           where x1, x2, etc., evaluate to numbers and 
+		   a < x1 < b, etc.
+        nint (expr,var,a,b, points(x1,x2,...),real)
+        nint (expr,var,a,b, points(x1,x2,...),imaginary)
+        nint (expr,var,a,b, points(x1,x2,...),complex)
+\end{myVerbatim2}
+\newpage
+\subsubsection*{2D INTEGRAL SYNTAX}
+We use a 2d notation similar to Mathematica's.
+\mv| nint(f,[x,x1,x2],[y,y1,y2])| is the approximate numerical value of
+the double integral \mv|integrate( integrate (f,y,y1,y2), x,x1,x2)|.
+The 2d quadrature syntax is then:
+\begin{myVerbatim2}
+    nint (expr,[x,x1,x2 [x-option]],[y,y1,y2 [y-option]] [gen-option]) 
+\end{myVerbatim2}
+		  which includes a try using integrate, or
+\begin{myVerbatim2}
+    quad (expr,[x,x1,x2 [x-option]],[y,y1,y2 [y-option]] [gen-option]) 
+\end{myVerbatim2}
+which uses only the quadpack routines.
+%\newpage
+For example (in each, you can replace
+  \mv|nint| by \mv|quad|):
+\begin{myVerbatim2}
+        nint (expr,[x,x1,x2],[y,y1,y2]) 				
+		
+        nint (expr,[x,x1,x2],[y,y1,y2],real)
+       
+        nint (expr,[x,x1,x2],[y,y1,y2,strong_osc])        
+		
+        nint (expr,[x,x1,x2,strong_osc],[y,y1,y2],imaginary)
+        
+        nint (expr,[x,x1,x2],[y,y1,y2,principal_val(y0)])        
+        
+        nint (expr,[x,x1,x2],[y,y1,y2,points(ya,yb,...)])        
+\end{myVerbatim2}		
+\subsubsection*{GENERAL REMARKS}		
+\mv|nint| calls \mv|nint1d| for a 1d integral or \mv|nint2d| for a 2d integral.
+     \mv|nint1d| and \mv|nint2d| are responsible for making sure the work detail
+	 lists \mv|nargL| and \mv|noutL| are constructed and available as global
+     lists if \mv|integrate| is used and is successful.\\
+     
+\noindent Otherwise these lists are constructed by the
+     code in \mv|quad1d| or \mv|quad2d|, which are called if the
+	 word \mv|nint| is replaced by \mv|quad|, or which are called
+	 if the call to \mv|integrate| (by \mv|nint|) is not sucessful.\\
+     
+\noindent \mv|nargL| is a global list of method and args input,
+      \mv|noutL| is a global list of method and either
+      \mv|integrate| or quadpack total output.\\
+      
+\noindent If \mv|method| is set to \mv|true|, \mv|nint| or \mv|quad| will print out
+      the method used during the work.\\
+      
+\noindent If \mv|debug| is set to \mv|true|, many details of progress
+      will be printed to the console screen.
+\subsubsection{1D Quadrature Using \textbf{mdefint} and \textbf{ndefint} }
+You might want to try using (i.e., force Maxima to use) \mv|integrate|,
+ even though \mv|nint| avoids using \mv|integrate| for a particular integrand.\\
+  
+\noindent For 1d integrals, the package provides the function \mv|mdefint| 
+ which uses \mv|integrate| (in a careful way)
+  to try to get a symbolic answer. You can then use \mv|cfloat| to reduce the answer to
+  a floating point value. \mv|cfloat| is a package function which combines \mv|rectform|,
+  \mv|float|, and \mv|expand| in one function, with the definition:
+\begin{myVerbatim2}
+      cfloat(expr):= (expand(float(rectform(expr))))$
+\end{myVerbatim2}
+However, if the symbolic answer is the difference of two almost equal values, \mv|cfloat| can
+  return an incorrect numerical value. A more careful reduction to a numerical value
+  occurs with the use of the package function \mv|fbfloat (expr, ndigits)| 
+  which uses bigfloat methods to  reduce \mv|expr| to a floating point
+  value using the requested precision.\\
+  
+\noindent The package function \mv|ndefint| combines \mv|mdefint| with \mv|fbfloat| 
+ and requests 32 digit accuracy.
+%\newpage
+\noindent Some examples of the use of \mv|mdefint| and \mv|ndefint| for 1d
+ quadrature (see below for 2d examples):
+ \begin{myVerbatim}
+(%i1) load(nint);
+(%o1) "c:/work2/nint.mac"
+(%i2) mdefint(log(1/x)/sqrt(x),x,0,1);
+(%o2) 4
+(%i3) ndefint(log(1/x)/sqrt(x),x,0,1);
+(%o3) 4.0
+(%i4) mdefint(log(1/x)/sqrt(%i*x),x,0,1);
+(%o4) -4*(-1)^(3/4)
+(%i5) ndefint(log(1/x)/sqrt(%i*x),x,0,1);
+(%o5) 2.82842712474619-2.82842712474619*%i
+(%i6) mdefint(log(1/x)/sqrt(%i*x),x,0,1);
+(%o6) -4*(-1)^(3/4)
+(%i7) cfloat(%);
+(%o7) 2.828427124746191-2.828427124746191*%i
+(%i8) fbfloat(%o6,32);
+(%o8) 2.82842712474619-2.82842712474619*%i
+ \end{myVerbatim}
+\subsubsection{1D Quadrature Examples Using \textbf{nint} and \textbf{quad} }
+We continue with the same integrand used above. Rather than setting
+  \mv|method| to \mv|true|, we can use the global parameter \mv|noutL|
+  to see what actual method(s) were used and perhaps some details.
+  Even if we set \mv|method| to  \mv|true|, we can always look at
+  \mv|noutL|;  more details are given if quadpack was used.\\
+  
+\noindent If no method option is included in the arguments given
+  to \mv|nint| or \mv|quad|, and if quadpack is being used,
+  \mv|quad1d| runs a competition between
+   \mv|quad_qags| and \mv|quad_qag|, and selects the result with
+  the least estimated error magnitude.  
+\begin{myVerbatim}
+(%i1) load(nint);
+(%o1) "c:/work2/nint.mac"
+(%i2) nint(log(1/x)/sqrt(%i*x),x,0,1);
+(%o2) 2.82842712474623-2.828427124746158*%i
+(%i3) noutL;
+(%o3) [[qags,2.82842712474623,3.6770586575585185E-13,315,0],
+       [qags,-2.828427124746158,1.1102230246251565E-13,315,0]]
+(%i4) quad(log(1/x)/sqrt(%i*x),x,0,1);
+(%o4) 2.82842712474623-2.828427124746158*%i
+(%i5) noutL;
+(%o5) [[qags,2.82842712474623,3.6770586575585185E-13,315,0],
+       [qags,-2.828427124746158,1.1102230246251565E-13,315,0]]
+(%i6) method:true$
+(%i7) nint(log(1/x)/sqrt(%i*x),x,0,1);
+   quad_qags 
+   quad_qags 
+(%o7) 2.82842712474623-2.828427124746158*%i
+\end{myVerbatim}
+\newpage
+\begin{myVerbatim}
+(%i8) quad(log(1/x)/sqrt(%i*x),x,0,1);
+   quad_qags 
+   quad_qags 
+(%o8) 2.82842712474623-2.828427124746158*%i
+(%i9) noutL;
+(%o9) [[qags,2.82842712474623,3.6770586575585185E-13,315,0],
+        [qags,-2.828427124746158,1.1102230246251565E-13,315,0]]
+(%i10) nint(x^2,x,0,2);
+ integrate 
+(%o10) 2.666666666666667
+(%i11) mdefint(x^2,x,0,2);
+(%o11) 8/3
+(%i12) cfloat(%);
+(%o12) 2.666666666666667
+\end{myVerbatim}
+\subsubsection*{Non-Finite Range Examples}
+\begin{myVerbatim}
+(%i13) nint(1/(1+x^2),x,0,inf);
+ integrate 
+(%o13) 1.570796326794897
+(%i14) nint(exp (%i*x^2),x,minf,inf);
+ integrate 
+(%o14) 1.2533141373155*%i+1.2533141373155
+(%i15) quad(exp (%i*x^2),x,minf,inf);
+ quad_qagi  
+ realpart quad_qagi error =  integration failed to converge 
+(%o15) false
+\end{myVerbatim}
+%\newpage
+\noindent In the last example, \mv|integrate| is able to find the result, but
+  quadpack fails. The symbolic answer is:
+\begin{myVerbatim}
+(%i16) mdefint(exp (%i*x^2),x,minf,inf);
+(%o16) sqrt(%pi)*(%i/sqrt(2)+1/sqrt(2))
+\end{myVerbatim}
+\subsubsection*{Further Examples}
+Because the integrand contains \mv|sqrt|, \mv|nint| bypasses \mv|integrate|
+  here and calls \mv|quad1d|. However,\\
+  \mv|integrate| can actually do this
+  integral and returns the correct numerical value.
+\begin{myVerbatim}
+(%i17) nint(sin(x)/sqrt(x),x,0,5000,real,singular);
+ quad_qags 
+(%o17) 1.251128192999518
+(%i18) ndefint(sin(x)/sqrt(x),x,0,5000);
+(%o18) 1.251128192999533
+\end{myVerbatim}
+Here is a bessel function example in which we request the
+  use of \mv|quad_qag|:
+\begin{myVerbatim}
+(%i19) nint(bessel_j(0,x)/(1+x),x,0,1,real,strong_osc);
+ quad_qag 
+(%o19) 0.64654342647716
+\end{myVerbatim}
+\newpage
+Here is a principal value integral done by quadpack:
+\begin{myVerbatim}
+(%i20) quad((x-x^2)^(-1),x,-1/2,1/2,principal_val(0));
+ quad_qawc 
+ quad_qawc  
+(%o20) 1.09861228866811
+\end{myVerbatim}
+However, \mv|integrate| can do this principal value integral, and issues the
+  ``Principal Value'' printout to warn the user:
+\begin{myVerbatim}
+(%i21) ndefint((x-x^2)^(-1),x,-1/2,1/2);
+Principal Value
+(%o21) 1.09861228866811
+\end{myVerbatim}
+Here is a quadrature done using the quadpack routine \mv|quad_qagp| by including
+  the \mv|points| option:
+\begin{myVerbatim}
+(%i22) quad(1/sqrt(sin(x)),x,0,10,points(%pi,2*%pi,3*%pi));
+ quad_qagp 
+  quad_qagp  
+  quad_qagp  
+(%o22) 10.48823021716681-6.769465521725387*%i 
+\end{myVerbatim}
+\mv|integrate| cannot find a value for this integral:
+\begin{myVerbatim}
+(%i23) ndefint(1/sqrt(sin(x)),x,0,10);
+(%o23) false
+(%i24) mdefint(1/sqrt(sin(x)),x,0,10);
+(%o24) 'integrate(1/sqrt(sin(x1030868)),x1030868,0,10)
+\end{myVerbatim}
+\subsubsection{2D Quadrature Examples Using \textbf{nint} and \textbf{quad} }
+The no-option version of 2D syntax also works with \mv|mdefint| and \mv|ndefint|.
+\begin{myVerbatim}
+(%i1) load(nint);
+(%o1) "c:/work2/nint.mac"
+(%i2) nint(1,[x,0,1],[y,0,1]);
+(%o2) 1.0
+(%i3) quad(1,[x,0,1],[y,0,1]);
+(%o3) 1.0
+(%i4) mdefint(1,[x,0,1],[y,0,1]);
+(%o4) 1
+(%i5) ndefint(1,[x,0,1],[y,0,1]);
+(%o5) 1.0
+\end{myVerbatim}
+ and here are uses of the option \mv|real|:
+\begin{myVerbatim}
+(%i6) nint(1/sqrt(x+y),[x,0,1],[y,0,1],real);  
+(%o6) 1.104569499660576
+(%i7) nint(sin(x*y),[x,0,1],[y,0,1],real);  
+(%o7) 0.23981174200056
+\end{myVerbatim}
+\newpage
+A 2d example in which the presence of \mv|log| and also fractional powers causes
+  \mv|integrate| to be bypassed in favor of quadpack (set \mv|method| to \mv|true|
+  to see easily what method is being used here):
+\begin{myVerbatim}
+(%i8) method:true$
+(%i9) nint(log(y)/x^(4/5),[x,0,1],[y,0,1]);
+  qags2  
+(%o9) -5.000000000000004
+(%i10) time(%);
+(%o10) [6.23]
+(%i11) nint(log(y)/x^(4/5),[x,0,1],[y,0,1],real);
+  qags2  
+(%o11) -5.000000000000004
+(%i12) time(%);
+(%o12) [3.78]
+(%i13) ndefint(log(y)/x^(4/5),[x,0,1],[y,0,1]);
+(%o13) -5.0
+(%i14) time(%);
+(%o14) [0.02]
+\end{myVerbatim}
+This is a case in which including the option \mv|real| halves the time
+  of the quadpack calculation.
+This integrand-domain combination is correctly evaluated by \mv|mdefint| in a fraction
+  of the time required by quadpack.
+\begin{myVerbatim}
+(%i15) mdefint(log(y)/x^(4/5),[x,0,1],[y,0,1]);
+(%o15) -5
+(%i16) time(%);
+(%o16) [0.0]
+\end{myVerbatim}
+2d examples with non-finite limits:
+\begin{myVerbatim}
+(%i17) nint(exp(-abs(x) - abs(y)),[x,minf,inf],[y,minf,inf]);
+ integrate 
+(%o17) 4.0
+(%i18) quad(exp(-abs(x) - abs(y)),[x,minf,inf],[y,minf,inf]);
+ qagi(qagi(..)) 
+(%o18) 3.999999999996149
+(%i19) nint(sin(x*y)*exp(-x)*exp(-y),[x,0,inf],[y,0,inf],real);
+ qagi(qagi(..)) 
+(%o19) 0.34337796296064
+\end{myVerbatim}
+\subsubsection{The \textbf{nint} Package Sets \textbf{domain} to \textbf{complex}: Caution!}
+When you load in the \mv|nint| package, \mv|domain| is set to \mv|complex|,
+which can result in an incorrect symbolic integral result or an error
+when you directly use \mv|integrate|.\\
+
+\noindent Here is a 2d example, in which
+\mv|integrate| gives the correct answer only if \mv|domain| is set to \mv|real|
+(the normal default in the absence of the package \mv|nint.mac|).
+(This is a Maxima bug.)\\
+
+\noindent If you are only interested in the numerical value (for a particular value of
+ the parameter \mv|b|), and use our package 
+functions \mv|nint| or \mv|quad|, there is no problem, because the \mv|sqrt|
+function in the integrand causes \mv|nint| to bypass \mv|integrate| automatically.
+\begin{myVerbatim}
+(%i1) load(nint);
+(%o1) "c:/work2/nint.mac"
+(%i2) domain;
+(%o2) complex
+\end{myVerbatim}
+\newpage
+\begin{myVerbatim}
+(%i3) foo :((-%pi)/2+acos(y/b)+acos(x/b))/(2*%pi)$
+(%i4) assume(b>0,x>0, x<b);
+(%o4) [b > 0,x > 0,b > x]
+(%i5) integrate(integrate(foo,y,0,sqrt(b^2 - x^2)),x,0,b);
+expt: undefined: 0 to a negative exponent.
+ -- an error. To debug this try: debugmode(true);
+(%i6) domain:real;
+(%o6) real
+(%i7) integrate(integrate(foo,y,0,sqrt(b^2 - x^2)),x,0,b);
+(%o7) b^2/(4*%pi)
+\end{myVerbatim}
+\subsubsection{Case: Symbolic Definite Integral the Difference of Two Almost Equal Numbers }
+Here we compare the direct use of \textbf{integrate}, \textbf{nint}, and
+  \textbf{quad} with an integrand whose definite integral is the difference
+  of two almost equal numbers.\\
+  
+\noindent Use of \mv|cfloat| (an \mv|nint| package function which combines \mv|rectform|,
+\mv|float|, and \mv|expand|) produces a wildly wrong numerical answer.
+Use of the package function \mv|fbfloat|, and choice of 32 digit precision, 
+uses bigfloat methods  to get an accurate answer, which is then 
+converted back to 16 digit display inside the function \mv|fbfloat|.\\
+
+\noindent The package function \mv|fchop| is used routinely in the package to ignore
+  very small numbers.\\
+  
+\noindent The package function \mv|nint| tries \mv|integrate| first, and if
+ successful then uses \mv|fbfloat| with 32 digit precision requested to obtain the numerical
+ value from the symbolic definite integral, and then uses \mv|fchop|.\\
+
+\noindent The package function \mv|quad| always uses \mv|fchop| on the result
+returned by quadpack to round off the numerical  answer.
+(But see below about turning off the chopping of very small numbers.)\\
+
+\noindent It is clear, from the nature of the integrand, that the answer must be a
+real number.
+\begin{myVerbatim}
+(%i1) load(nint);
+(%o1) "c:/work2/nint.mac"
+(%i2) ee : integrate(exp(x^5),x,1,2);
+(%o2) ((-1)^(4/5)*gamma_incomplete(1/5,-32)-(-1)^(4/5)
+                                            *gamma_incomplete(1/5,-1))/5
+(%i3) cfloat(ee);
+(%o3) 1.0132394896940175E+12-1.9531250000000001E-4*%i
+(%i4) fbfloat(ee,32);
+(%o4) 1.0512336862202133E-20*%i+1.0132394896940183E+12
+(%i5) fchop(%);
+(%o5) 1.0132394896940183E+12
+(%i6) nint(exp(x^5),x,1,2);
+(%o6) 1.0132394896940183E+12
+(%i7) noutL;
+(%o7) [integrate,1.0132394896940183E+12]
+(%i8) quad(exp(x^5),x,1,2);
+(%o8) 1.0132394896940144E+12
+(%i9) noutL;
+(%o9) [qag,1.0132394896940144E+12,0.011249218166387,155,0]
+\end{myVerbatim}
+In the above output, the global parameter \mv|noutL| includes the method and the
+ result(s) returned by the method.\\
+ 
+\noindent The global parameter \mv|nargL| is a list which includes both the
+method and the arguments used by the method.
+ The names of the integration variables actually used are
+automatically generated by the code to allow global assumptions
+to remain in force after the computation, hence the weird names.
+\begin{myVerbatim}
+(%i10) nint(exp(x^5),x,1,2);
+(%o10) 1.0132394896940183E+12
+(%i11) nargL;
+(%o11) [integrate,%e^wx62375^5,wx62375,1,2]
+(%i12) quad(exp(x^5),x,1,2);
+(%o12) 1.0132394896940144E+12
+(%i13) nargL;
+(%o13) [qag,%e^x76014^5,x76014,1.0,2.0,3,limit = 800]
+\end{myVerbatim}
+\subsubsection{Turning Off Automatic Chop of Answer}
+The global parameter \mv|dochop| is set to \mv|true| by the package and
+ causes automatic chopping of the answer. Set \mv|dochop| to false to
+ prevent automatic chopping of the answer.
+\begin{myVerbatim}
+(%i1) load(nint);
+(%o1) "c:/work2/nint.mac"
+(%i2) dochop;
+(%o2) true
+(%i3) nint(exp(x^5),x,1,2);
+(%o3) 1.0132394896940183E+12
+(%i4) dochop:false$
+(%i5) nint(exp(x^5),x,1,2);
+(%o5) 1.0512336862202133E-20*%i+1.0132394896940183E+12
+(%i6) dochop:true$
+(%i7) nint(exp(x^5),x,1,2);
+(%o7) 1.0132394896940183E+12
+\end{myVerbatim}
+\subsubsection{Changing the Chop Value Used by \textbf{nint}}
+The global parameter \mv|_small%| holds the small chop value; numbers whose absolute
+  values are smaller than \mv|_small%| are automatically ``chopped'' by \mv|fchop|.
+ Set \mv|_small%| to smaller values if you want less chopping.
+\begin{myVerbatim}
+(%i8) method : false$
+(%i9) nint(exp(x^5),x,1,2);
+(%o9) 1.0132394896940183E+12
+(%i10) _small%;
+(%o10) 1.0E-14
+(%i11) _small% : 1.0e-30$
+(%i12) nint(exp(x^5),x,1,2);
+(%o12) 1.0512336862202133E-20*%i+1.0132394896940183E+12
+\end{myVerbatim}
+\newpage
+\subsection{Arbitrary Precision One Dimensional Quadrature with \textbf{apnint} and \textbf{apquad}}
+\subsubsection*{Syntax}
+The new Ch. 8 functions \mv|apnint| (arbitrary precision numerical integration which first tries
+   integrate)  and \mv|apquad| (arbitrary precision quadrature which avoids integrate) are defined
+   in the file \mv|apnint.mac| (which loads \mv|tsquad.mac| and \mv|dequad.mac|).
+To use \mv|apnint| and/or \mv|apquad|, you should first load the\\
+ \mv|nint.mac| package, and then the \mv|apnint.mac| package.\\
+
+\noindent Both functions have the same syntax:
+\begin{myVerbatim2}
+     apnint (expr, x, x1,x2,rp,wp)
+     apquad (expr, x, x1,x2,rp,wp)
+\end{myVerbatim2}
+  in which \mv|expr| depends on the variable \mv|x| (of course you can use any
+  symbol), \mv|x1| is less than \mv|x2|, \mv|x1| must evaluate to a finite real number, but
+  \mv|x2| can either be finite (evaluating to a real number) or the symbol \mv|inf|.\\
+  
+\noindent \mv|rp| is the ``requested precision'' (``precision goal'', the number of
+   trustworthy digits wanted in the result), and
+  \mv|wp| is the ``working precision'' (\mv|fpprec| is set to \mv|wp| during the
+  course of the calculation).\\
+  
+\noindent These two functions do not set values of \mv|noutL| and \mv|nargL|, but
+ you can set \mv|method| to \mv|true| to have a short printout of the method used.
+ The finite numerical case uses a new function \mv|tsquad| (which accepts a complex
+  integrand), defined in the file \mv|tsquad.mac|.\\
+  
+\noindent The non-finite numerical case uses a new function \mv|dequad| (which also
+  accepts a complex integrand), defined in the file \mv|dequad.mac|.\\
+  
+\noindent Both of these new functions return the result as a bigfloat number.
+In general, \mv|bfloat(expr)| returns a bigfloat number whose precision depends on the
+ current value of \mv|fpprec|. Both package functions \mv|apnint| and \mv|apquad| worry
+about setting the value of \mv|fpprec| locally to the values needed corresponding
+to the \mv|wp| arg. You do not have to set the global value of \mv|fpprec| yourself,
+although that global value will not affect the precision of the calculation: only
+the supplied value \mv|wp| affects the precision of the actual calculation.\\
+
+\noindent Here are some examples of bigfloat number returns 
+  (the default value of \mv|fpprec| is \mv|16|).
+When comparing two bigfloat numbers, you should set the
+  value of \mv|fpprec| to a large enough value.
+Using \mv|float| to convert a bigfloat number to an ordinary
+  floating point number leads to a loss of significant digits.
+(See Ch. 9 for more discussion of bigfloats.)
+\begin{myVerbatim}
+(%i1) fpprec;
+(%o1) 16
+(%i2) pi16 : bfloat(%pi);
+(%o2) 3.141592653589793b0
+(%i3) pi30 : bfloat(%pi),fpprec:30;
+(%o3) 3.14159265358979323846264338328b0
+(%i4) fpprec;
+(%o4) 16
+(%i5) abs(pi16 - pi30);
+(%o5) 0.0b0
+(%i6) abs(pi16 - pi30),fpprec:40;
+(%o6) 1.144237745221949411169021904042519539695b-17
+(%i7) pi30f : float(pi30);
+(%o7) 3.141592653589793
+\end{myVerbatim}
+\newpage
+\begin{myVerbatim}
+(%i8) abs(pi16 - pi30f),fpprec:40;
+(%o8) 1.1102230246251565404236316680908203125b-16
+\end{myVerbatim}
+\subsubsection*{An Accuracy Test}
+A test used in Ch.9 is the known integral
+\begin{equation}
+\mathbf{\int_{0}^{1} \sqrt{t}\,\boldsymbol{\ln}(t)\,dt = -4/9}
+\end{equation}
+You need to load both the \mv|nint.mac| package, and then the
+ \mv|apnint| package (the latter loads \mv|tsquad.mac| and
+ \mv|dequad.mac|).
+\begin{myVerbatim}
+(%i1) (load(nint),load(apnint));
+   _kmax% =  8   _epsfac% =  2 
+(%o1) "c:/work2/apnint.mac"
+(%i2) integrate(sqrt(x)*log(x),x,0,1);
+(%o2) -4/9
+(%i3) tval : bfloat(%),fpprec:45;
+(%o3) -4.44444444444444444444444444444444444444444445b-1
+(%i4) apval : apquad(sqrt(x)*log(x),x,0,1,30,40);
+ construct _yw%[kk,fpprec] array for kk = 
+  8  and fpprec =  40   ...working... 
+(%o4) -4.444444444444444444444444444444444444445b-1
+(%i5) abs(apval - tval),fpprec:45;
+(%o5) 4.46422161518439410412204461320543256312937649b-41
+\end{myVerbatim}
+Requesting thirty digit accuracy with forty digit arithmetic returns a value
+  for this integral which has about forty digit precision.
+See Ch.9 for other tests using known integrals.\\
+
+\noindent The loading of the \mv|apnint.mac| file causes the loading of other
+  files of the package. The loading of the package file \mv|tsquad.mac| 
+  produces the printout: \mv|_kmax% =  8   _epsfac% =  2| seen in the above
+  example, which warns that two global parameters are set by the package.
+  Ch.9 discusses the meaning of those parameters, and the possibility of
+  changing them to fit your special problem.\\
+  
+\noindent An array of transformation coefficients is constructed, using
+  40 digit arithmetic, in the above example. Once that array has been
+  constructed, other numerical integrals can be evaluated using the same
+  set of coefficients (as long as the same working precision \mv|wp| is
+  requested).\\
+  
+\noindent If you change the value of \mv|wp|, a new array of coefficients is
+constructed, which is available for use with other integrals (the original
+  40 digit array is still available also).
+\begin{myVerbatim}
+(%i6) apquad(sqrt(x)*log(x),x,0,1,20,30);
+ construct _yw%[kk,fpprec] array for kk = 
+  8  and fpprec =  30   ...working... 
+(%o6) -4.44444444444444444444444444445b-1
+(%i7) apquad(sqrt(x)*log(x),x,0,1,30,40);
+(%o7) -4.444444444444444444444444444444444444445b-1
+\end{myVerbatim}
+\newpage
+\subsubsection*{Some Examples}
+Using \mv|apquad| forces use of a numerical method discussed in Ch.9,
+  instead of first trying \mv|integrate|.
+The \mv|expr| to be integrated can be complex.
+\begin{myVerbatim}
+(%i8) apquad(sin(x)*exp(%i*x),x,0,2,20,30);
+(%o8) 1.18920062382698206284315977363b0*%i+4.13410905215902978659792045774b-1
+\end{myVerbatim}
+However this integral can be done using \mv|integrate|, and Maxima
+  is successful in obtaining a \mv|bfloat| value of the symbolic result:
+\begin{myVerbatim}
+(%i9) method:true$
+(%i10) apnint(sin(x)*exp(%i*x),x,0,2,20,30);
+ integrate 
+(%o10) 1.18920062382698206284315977363b0*%i+4.13410905215902978659792045774b-1
+\end{myVerbatim}
+Here is an example of a non-finite integral with a complex integrand.
+We force use of a numerical method by using \mv|apquad|:
+\begin{myVerbatim}
+(%i11) apquad(exp(-x +%i*x),x,0,inf,20,30);
+dequad 
+(%o11) 5.0b-1*%i+5.0b-1
+\end{myVerbatim}
+The package function \mv|dequad| is defined in the file \mv|dequad.mac|,
+ loaded by \mv|apnint.mac|, and can handle a complex integrand, passing the
+  real and imaginary parts separately to the Ch.9 function \mv|quad_de|
+  (the latter assumes a real integrand).\\
+  
+\noindent As in the previous example, using \mv|apnint| produces an answer from \mv|integrate|:
+\begin{myVerbatim}
+(%i12) apnint(exp(-x +%i*x),x,0,inf,20,30);
+ integrate 
+(%o12) 5.0b-1*%i+5.0b-1
+\end{myVerbatim}
+Here is an example of an integrand containing a Bessel function, and \mv|integrate|
+  cannot find the definite integral over the non-finite domain, nor can \mv|integrate|
+  find the indefinite integral:
+\begin{myVerbatim}
+(%i13) integrate(bessel_j(1,x)*exp(-x),x,0,inf);
+(%o13) 'integrate(bessel_j(1,x)*%e^-x,x,0,inf)
+(%i14) integrate(bessel_j(1,x)*exp(-x),x);
+(%o14) 'integrate(bessel_j(1,x)*%e^-x,x)
+\end{myVerbatim}
+If we force the use of the numerical bigfloat methods, the integrand is first tested
+  to see if evaluation at a bigfloat specified point returns a bigfloat number, and
+  for this example the Bessel function factor is not reduced:
+\begin{myVerbatim}
+(%i15) bfloat(bessel_j(1,0.5b0)*exp(-0.5b0));
+(%o15) 6.065306597126334b-1*bessel_j(1.0b0,5.0b-1)
+\end{myVerbatim}
+  and \mv|apquad| returns \mv|false|.
+\begin{myVerbatim}
+(%i16) apquad(bessel_j(1,x)*exp(-x),x,0,inf,20,30);
+apquad: cannot obtain bfloat value from integrand 
+(%o16) false
+\end{myVerbatim}
+The presence of \mv|sqrt| and/or \mv|log| in an integrand causes \mv|apnint| to bypass \mv|integrate|,
+(just as happens with \mv|nint|).
+\begin{myVerbatim}
+(%i17) apnint(log(1/x)/sqrt(%i*x),x,0,1,20,30);
+tsquad 
+(%o17) 2.82842712474619009760337744842b0-2.82842712474619009760337744842b0*%i
+\end{myVerbatim}
+\newpage
+Here is an example of a complex integrand in which \mv|quad| can get a numerical
+  answer (about 15 digit precision), but \mv|apquad| can only get an answer for the
+  \mv|realpart| of the integrand:
+\begin{myVerbatim}
+(%i18) quad(log(-3+%i*x),x,-2,3);
+   quad_qag 
+   quad_qags 
+(%o18) 2.449536971144524*%i+6.02070929514083
+(%i19) quad(realpart(log(-3+%i*x)),x,-2,3);
+   quad_qag 
+(%o19) 6.02070929514083
+(%i20) quad(imagpart(log(-3+%i*x)),x,-2,3);
+   quad_qags 
+(%o20) 2.449536971144524
+(%i21) apnint(realpart(log(-3+%i*x)),x,-2,3,20,30);
+tsquad 
+(%o21) 6.02070929514083135694888711387b0
+(%i22) apnint(imagpart(log(-3+%i*x)),x,-2,3,20,30);
+quad_ts: vdiffnew > vdiffold before vdiff < eps0 reached 
+quad_ts: abort calc. 
+(%o22) false
+(%i23) imagpart(log(-3+%i*x));
+(%o23) atan2(x,-3)
+\end{myVerbatim}
+The bigfloat calculation for the imaginary part of the integrand was aborted when
+  the differences between the current estimate and the previous estimate of the integral
+  started growing (instead of decreasing steadily).
+\subsection{Using the Wolfram Alpha Web Site for Integrals}
+The Wolfram Alpha web page, \mv|http://www.wolframalpha.com|,
+ allows free one-line commands (integrals, derivatives, plots, etc.,)
+ which may require translating Maxima syntax into Mathematica syntax.\\
+ 
+\noindent A web page with some translation from Maxima to Mathematica is
+\begin{myVerbatim2}
+  http://www.math.harvard.edu/computing/maxima/
+\end{myVerbatim2}
+A larger comparison of Maxima, Maple, and Mathematica syntax is at
+\begin{myVerbatim2}
+http://beige.ucs.indiana.edu/P573/node35.html
+\end{myVerbatim2}
+Maxima syntax for 1d symbolic integration is
+\begin{myVerbatim}
+(%i13) integrate(cos(x),x,0,1);
+(%o13) sin(1)
+(%i14) float(%);
+(%o14) 0.8414709848079
+\end{myVerbatim}
+\noindent The corresponding Mathematica request would be
+(note the curly brackets):
+\begin{myVerbatim2}
+Integrate[Cos[x], {x, 0, 1}]
+\end{myVerbatim2}
+ for a symbolic answer, and
+ \begin{myVerbatim2}
+ NIntegrate[Cos[x], {x, 0, 1}]
+ \end{myVerbatim2}
+produces a numerical result corresponding to Maxima's
+\begin{myVerbatim2}
+ float(integrate(cos(x),x,0,1))
+\end{myVerbatim2}
+Mathematica also has the function \mv|N| which computes the
+  numerical value of \mv|expr| with the syntax:
+\begin{myVerbatim2}
+ N[ expr ]
+\end{myVerbatim2}
+or
+\begin{myVerbatim2}
+  expr //N
+\end{myVerbatim2}
+Two examples of numerical two dimensional integration in Mathematica
+ syntax are:
+\begin{myVerbatim2}
+  NIntegrate[1/Sqrt[x + y], {x,0,1},{y,0,1} ]
+  NIntegrate[Sin[ x*y ],{x,0,1}, {y,0,1} ]
+\end{myVerbatim2}
+\subsection{Direct Quadpack Use of \textbf{quad\_qags}, \textbf{quad\_qag}, and \textbf{quad\_qagi}}
+The quadpack subroutine package originally was a set of Fortran 
+   subroutines, described in the book:
+\begin{myVerbatim2}
+Quadpack: A Subroutine Package for Automatic Integration,
+by R. Piessens, E. de Doncker-Kapenga, C.W. Uberhuber,
+     and D.K. Kahaner,
+Springer-Verlag, 1983
+\end{myVerbatim2}
+and designed for the computation of 1d integrals.
+The Maxima developer Raymond Toy has adapted the package to Maxima via a
+  translation from Fortran to Common Lisp (using f2cl) combined with a
+  special interface for the Maxima user.\\
+  
+\noindent See the Maxima Help Manual for an extensive discussion in Sec. 19.3
+ (Sec. 19 is Integration).
+\subsubsection{Syntax for Quadpack Functions}  
+The integrand \mv|expr| supplied as the first argument to a quadpack function must evaluate
+  to a real number throughout the requested range of the independent variable.
+All the quadpack functions (``q'' is for ``quadrature''), except two, are called using the syntax:
+\begin{myVerbatim2}
+   quad_qaxx ( expr, var, a, b, (other-required-args), optional-args)
+\end{myVerbatim2}
+The exceptions are the Cauchy principle value integration routine \mv+quad_qawc+
+  which does the integral\\
+  $\mathbf{\int_{a}^{b} f(x)/(x - c) \, dx}$, 
+  using the syntax \mvs+quad_qawc(expr,var,c,a,b,optional-args)+,\\
+  and the cosine or sine Fourier transform 
+  integration routine \mv+quad_qawf+
+  which does integrals\\
+  $\mathbf{\int_{a}^{\infty} f(x)\,\boldsymbol{\cos}(\boldsymbol{\omega}\,x)\,dx}$ \, or \,
+  $\mathbf{\int_{a}^{\infty} f(x)\,\boldsymbol{\sin}(\boldsymbol{\omega}\,x)\,dx}$ 
+  using the syntax\\ 
+    \mvs+   quad_qawf(expr,var,a,omega,trig,optional-args)+.
+\subsubsection{Ouput List of Quadpack Functions and Error Code Values}
+All Quadpack functions return a \textbf{list} of four elements: 
+\begin{myVerbatim2}
+ [num-val, est-abs-error, number-integrand-evaluations, error-code].
+\end{myVerbatim2}
+%\newpage 
+The \textbf{error-code} (the fourth element of the returned list) can
+    have the values: 	
+\begin{itemize}
+\item[] 0 - no problems were encountered
+\item[] 1 - too many sub-intervals were done
+\item[] 2 - excessive roundoff error is detected
+\item[] 3 - extremely bad integrand behavior occurs
+\item[] 4 - failed to converge
+\item[] 5 - integral is probably divergent or slowly convergent
+\item[] 6 - the input is invalid
+\end{itemize}  
+%\newpage
+\subsubsection{Integration Rule Parameters and Optional Arguments}  
+All the Quadpack functions (except one) include   \textbf{epsrel}, \textbf{epsabs}, 
+  and \textbf{limit} as possible optional types of allowed arguments to override
+  the default values of these parameters: \textbf{epsrel = 1e-8, epsabs = 0.0, limit = 200}.\\  
+To override the \textbf{epsrel} default value, for example, you would add the
+  optional argument \textbf{epsrel = 1e-6} or \textbf{epsrel=1d-6} (both have the
+  same effect).\\
+
+These Quadpack functions apply an integration rule adaptively until an estimate 
+   of the integral of \textbf{expr} over the interval \textbf{(a, b)} is achieved within
+   the desired absolute and relative error limits, \textbf{epsabs} and \textbf{epsrel}.
+With the default values \textbf{epsrel = 1e-8, epsabs = 0.0}, only \textbf{epsrel} plays
+  a role in determining the convergence of the integration rules used, and this
+  corresponds to getting the estimated relative error of the returned answer
+  smaller than \textbf{epsrel}.\\
+  
+If you override the defaults with the two optional arguments (in any order)
+  \textbf{epsrel = 0.0, epsabs = 1e-8}, for example, the value of \textbf{epsrel} will be
+  ignored and convergence will have been achieved if the estimated absolute error
+  is less than \textbf{epsabs}.\\
+  
+%\small
+The integration region is divided into subintervals, and on each iteration the
+   subinterval with the largest estimated error is bisected. 
+This ``adaptive method'' reduces the overall error rapidly, as the subintervals become concentrated around
+   local difficulties in the integrand.\\
+   
+The Quadpack parameter \textbf{limit}, whose default value is \textbf{200}, is the maximum
+  number of subintervals to be used in seeking a convergent answer. To increase that
+  limit, you would insert \textbf{limit=300}, for example.
+\newpage
+\subsubsection{\textbf{quad\_qags} for a Finite Interval}  \label{qags}
+The ``s'' on the end of \textbf{qags} is a signal that \mv+quad_qags+ 
+  has extra abilities in dealing with functions which have integrable 
+  \textbf{singularities}, but even if your function has no singular behavior,
+  \mv+quad_qags+ is still the best choice due to the sophistication
+  of the quadrature algorithm used. Use the syntax
+\begin{myVerbatim2}
+         quad_qags ( expr, var , a, b, [ epsrel, epsabs, limit ] ) 
+\end{myVerbatim2}
+%\newpage  
+where the keywords inside the brackets indicate possible optional
+  arguments (entered in any order), such as \textbf{epsrel = 1e-6}.
+  
+Thus the approximate numerical value of $\mathbf{\int_{0}^{1} e^{x^{2}} \, dx}$ would be the first
+  element of the list returned by \mvs|quad_qags (exp (x^2), x, 0, 1)|.
+\begin{myVerbatim}
+(%i1) display2d:false;
+(%o1) false
+(%i2) domain;
+(%o2) real
+(%i3) quad_qags(exp (x^2),x,0,1);
+(%o3) [1.462651745907182,1.6238696453143376E-14,21,0]
+\end{myVerbatim}    
+If you call \mv|quad_qags| with an unbound parameter in the integrand,
+  a noun form will be returned which will tell you all the defaults being used.
+\begin{myVerbatim}
+(%i4) quad_qags(a*x,x,0,1);
+(%o4) quad_qags(a*x,x,0,1,epsrel = 1.0E-8,epsabs = 0.0,limit = 200)
+\end{myVerbatim}
+There is a more efficient Quadpack function available, \mv|quad_qaws|, for integrals
+  which have end point algebraic and/or logarithmic singularites associated with 
+  of the form $\mathbf{\int_{a}^{b} f(x)\, w(x)\,dx}$, if the ``weight function'' $\mathbf{w(x)}$ has
+  the form (note: $\mathbf{f(x)}$ is assumed to be well behaved)
+\begin{equation}
+\mathbf{w(x) = (x-a)^{\boldsymbol{\alpha}}\,(b-x)^{\boldsymbol{\beta}} \,\boldsymbol{\ln}(x-a)\, \boldsymbol{\ln}(b-x)}
+\end{equation}
+where $\boldsymbol{\alpha} > -1$ and $\boldsymbol{\beta} > -1$ for convergence.
+See Sec \ref{qaws} for more information on \mv|quad_qaws| and its use.    
+% \newpage
+\subsubsection*{Example 1}  
+Here is an example of the use of \mv+quad_qags+ to compute the numerical
+  value of the integral $\mathbf{\int_{0}^{1} \sqrt{x}\,\boldsymbol{\ln} (1/x) \, dx}$.
+The integrand $\mathbf{g = x^{1/2}\,\boldsymbol{\ln}(1/x) = - x^{1/2}\,\boldsymbol{\ln}(x)}$ has the limiting
+  value $\mathbf{0}$ as $\mathbf{x \rightarrow 0}$ from the positive side.
+Thus the integrand is not singular at $\mathbf{x=0}$, but it is rapidly changing near $\mathbf{x=0}$
+  so an efficient algorithm is needed.
+(Our Example 2 will work with an integrand which is singular at $\mathbf{x=0}$.)\\
+  
+\noindent Let's check the limit at $\mathbf{x=0}$ and plot the function.
+\begin{myVerbatim}
+(%i5) g:sqrt(x)*log(1/x)$
+(%i6) limit(g,x,0,plus);
+(%o6) 0
+(%i7) (load(draw),load(qdraw))$
+(%i8) qdraw( ex(g,x,0,1) )$
+\end{myVerbatim}
+\newpage
+\noindent Here is that plot.
+\smallskip
+\begin{figure} [h]  
+   \centerline{\includegraphics[scale=.6]{ch7p2.eps} }
+	\caption{ $\mathbf{x^{1/2}\,\boldsymbol{\ln}(1/x)}$  }
+\end{figure} 
+% eps code
+% (%i49) qdraw( ex(x^(1/2)*log(1/x),x,0,1),
+%          pic(eps,"ch7p2",font("Times-Bold",20) ) )$
+
+\noindent Now we try out \mv|quad_qags| on this integral and compare with the
+  exact answer returned by \mv|integrate|, converted to 20 digit accuracy
+  using \mv|bfloat|.
+\begin{myVerbatim}
+(%i9) fpprintprec:8$
+(%i10) tval : block([fpprec:20], bfloat(integrate(g,x,0,1)) );
+(%o10) 4.4444444b-1
+(%i11) qlist:quad_qags(g,x,0,1 );
+(%o11) [0.444444,4.93432455E-16,315,0]
+(%i12) block ([fpprec:20], bfloat(abs(first(%) - tval)));
+(%o12) 8.0182679b-17
+\end{myVerbatim} 
+The first element of the returned list \textbf{qlist} is the approximate numerical value of the
+  integral.
+We have used \textbf{integrate} together with \textbf{bfloat} and \textbf{fpprec} 
+ to generate the ``true value'' good to about \textbf{20} digits (see Chapter 9),
+  and we see that the absolute error of the answer returned by \mv+quad_qags+ is
+  about $\mathbf{10^{-16}}$.
+The second element of \textbf{qlist} is the \textbf{estimated} absolute error of the returned answer.
+The third element shows that  \textbf{315} integrand evaluations were needed
+  to attain the requested (default) relative error \textbf{epsrel = 1e-8}.
+The fourth element is the error code value \textbf{0} which indicates no problems were
+  found.\\
+
+\noindent The algorithm used to find an approximation for this integral does not know the
+  ``exact'' (or true) answer, but does have (at each stage) an estimate of the answer
+  and an estimate of the likely error of this estimated answer (gotten by comparing
+  the new answer with the old answer, for example), and so can compute an estimated
+  relative error (est\_abs\_err/est\_answer) which the code checks against the requested
+  relative error goal supplied by the parameter \textbf{epsrel}. \\
+  
+\noindent We are assuming that the defaults are being used, and hence \textbf{epsabs} has the
+  value \textbf{0.0}, so that the convergence criterion used by the code is 
+\begin{equation}
+\mathbf{est\_rel\_err} \leq \mathbf{epsrel}
+\end{equation}
+or
+\begin{equation}
+\frac{\mathbf{est\_abs\_err}}{\mathbf{est\_answer}} \leq \mathbf{epsrel}
+\end{equation}
+or
+\begin{equation}
+\mathbf{est\_abs\_err} \leq  \mathbf{epsrel} \times \mathbf{est\_answer}
+\end{equation}
+\newpage
+\noindent We can check that the values returned by \mv+quad_qags+ are at least
+  consistent with the advertised convergence criterion. 
+\begin{myVerbatim}
+(%i13) est_answer : first(qlist);
+(%o13)                              0.444444
+(%i14) est_abs_err : second(qlist);
+(%o14)                           4.93432455E-16
+(%i15) est_rel_err : est_abs_err/est_answer;
+(%o15)                           1.11022302E-15
+\end{myVerbatim} 
+We see that the \mv+est_rel_err+ is much less than \textbf{epsrel}.
+\subsubsection*{Example 2}    
+Here we use \mv+quad_qags+ with an integrand which is singular at $\mathbf{x=0}$, 
+  but the singularity is an ``integrable singularity''.
+We want to calculate $\mathbf{\int_{0}^{1} \boldsymbol{\ln}(\boldsymbol{\sin}(x)) \, dx}$.
+\textbf{integrate} returns an
+  ``exact'' answer involving the dilogarithm
+  function with a complex argument (see below).\\
+  
+\noindent We first show that the integrand is singular at $\mathbf{x=0}$, first using
+  Maxima's \textbf{limit} function and then using \textbf{taylor}.
+We then use the approximate integrand for small $\mathbf{x}$ to show that the
+  indefinite integral is a function of $\mathbf{x}$ which has a finite limit at
+  $\mathbf{x=0}$. 
+\begin{myVerbatim}
+(%i1) display2d:false$
+(%i2) limit(log(sin(x)),x,0,plus);
+(%o2) minf
+(%i3) ix : taylor(log(sin(x)),x,0,2);
+(%o3) +log(x)-x^2/6
+(%i4) int_ix:integrate(ix,x);
+(%o4) x*log(x)-x^3/18-x
+(%i5) limit(int_ix,x,0,plus);
+(%o5) 0
+(%i6) assume(eps>0,eps<1)$
+(%i7) integrate(ix,x,0,eps);
+(%o7) (18*eps*log(eps)-eps^3-18*eps)/18
+(%i8) expand(%);
+(%o8) eps*log(eps)-eps^3/18-eps
+(%i9) limit(eps*log(eps),eps,0,plus);
+(%o9) 0
+\end{myVerbatim} 
+Output \textbf{\%o2} indicates that the integrand $\mathbf{\rightarrow -\infty}$ 
+  as $\mathbf{x \rightarrow 0^{+}}$.
+To see if this is an ``integrable singularity'', we examine the integrand for $\mathbf{x}$ positive but
+  close to $\mathbf{0}$, using a Taylor series expansion.
+We let \textbf{eps} represent $\boldsymbol{\epsilon}$, a small positive number to be
+  used as the upper limit of a small integration interval.\\
+  
+\noindent The approximate integrand, \textbf{ix}, shows a logarithmic singularity at $\mathbf{x=0}$.
+The indefinite integral of the approximate integrand, \textbf{int\_ix}, is finite as
+  $\mathbf{x \rightarrow 0^{+}}$.
+And finally, the integral of the approximate integrand over $\boldsymbol{(0,\epsilon)}$ is finite.
+Hence we are dealing with an integrable singularity, and we use \mv+quad_qags+
+  to evaluate the numerical value of the exact integrand over $\mathbf{[0,1]}$. 
+\begin{myVerbatim}
+(%i10) quad_qags(log(sin(x)),x,0,1);
+(%o10) [-1.056720205991585,1.1731951032784962E-15,231,0]
+\end{myVerbatim}
+\newpage
+\noindent Use of \textbf{integrate}  with this integrand-domain returns an expression involving
+the dilogarithm function\\
+ \mv|li[2](z)| in which \mv|z| is a complex number.
+At present, Maxima cannot find numerical values of the dilogarithm function
+  for non-real arguments.
+\begin{myVerbatim}
+(%i11) float(li[2](1));
+(%o11) 1.644934066848226
+(%i12) float(li[2](1+%i));
+(%o12) li[2](%i+1.0)
+(%i13) integrate(log(sin(x)),x,0,1);
+(%o13) -%i*atan(sin(1)/(cos(1)+1))-%i*atan(sin(1)/(cos(1)-1))+log(sin(1))
+                                  -log(2*cos(1)+2)/2-log(2-2*cos(1))/2
+                                  +%i*li[2](%e^%i)+%i*li[2](-%e^%i)
+                                  -%i*%pi^2/12+%i/2
+\end{myVerbatim}
+\subsubsection{\textbf{quad\_qags} for Double Integrals}
+In Sec.7.6 of Ch.7 we presented the notation (for an exact symbolic double integral):\\
+
+\noindent To evaluate the exact symbolic double integral
+\begin{equation}
+\int_{u1}^{u2} du \, \int_{v1(u)}^{v2(u)} dv\,f(u,v)  \equiv 
+  \int_{u1}^{u2} \left( \int_{v1(u)}^{v2(u)} f(u,v) \, dv \right) \, du
+\end{equation}
+we use \textbf{integrate} with the syntax: 
+\begin{myVerbatim2}
+       integrate( integrate( f(u,v), v, v1(u), v2(u) ), u, u1, u2 )
+\end{myVerbatim2} 
+in which \textbf{f(u,v)} can either be an expression depending on the
+  variables \textbf{u} and \textbf{v}, or  a Maxima function, and
+  likewise \textbf{v1(u)} and \textbf{v2(u)} can either be expressions depending
+  on \textbf{u} or Maxima functions.\\
+  
+\noindent Both \textbf{u} and \textbf{v} are ``dummy variables'', since the value of the
+  resulting double integral does not depend on our choice of symbols for
+  the integration variables; we could just as well use \textbf{x} and \textbf{y}.\\
+  
+\noindent To use \textbf{quad\_qags} we use
+\begin{myVerbatim2}
+   quad_qags ( quad_qags ( f(u,v), v, v1(u), v2(u) )[1], u, u1, u2 )
+\end{myVerbatim2}
+\subsubsection*{Example 1}
+For our first example, we use \textbf{quad\_qags} on the double integral:
+\begin{equation}
+\mathbf{\int_{1}^{3} \left( \int_{0}^{x/2} \frac{x\,y}{x+y} \, dy \right) dx }
+\end{equation}
+comparing with the \textbf{integrate} result,
+  first using the absolute error, then the relative error. 
+\begin{myVerbatim}
+(%i1) (fpprintprec:8,display2d:false)$
+(%i2) g : x*y/(x+y)$
+(%i3) tval : (block [fpprec:20],bfloat (integrate (integrate (g,y,0,x/2),x,1,3) ));
+Is  x  positive, negative, or zero?
+p;
+(%o3) 8.1930239b-1
+\end{myVerbatim}
+\newpage
+\begin{myVerbatim}
+(%i4) quad_qags ( quad_qags (g,y,0,x/2)[1],x,1,3);
+(%o4) [0.819302,9.09608385E-15,21,0]
+(%i5) block([fpprec:20], bfloat( abs (%[1] - tval)));
+(%o5) 6.1962154b-17
+(%i6) %/tval;
+(%o6) 7.5627942b-17
+\end{myVerbatim}
+Bear in mind that the quadpack functions (at present) have, at most, 16 digit accuracy.
+For a difficult numerical integral, the accuracy can be much less than that.
+\subsubsection*{Example 2}
+For our second example, we consider the double integral
+\begin{equation}
+\mathbf{\int_{0}^{1} \left( \int_{1}^{2+x} e^{x - y^{2}}\, dy \right) \, dx }
+\end{equation}  
+\begin{myVerbatim}
+(%i7) g : exp(x-y^2)$
+(%i8) tval : block([fpprec:20],bfloat(integrate( integrate(g,y,1,2+x),x,0,1)));
+(%o8) 2.3846836b-1
+(%i9) quad_qags( quad_qags(g,y,1,2+x)[1],x,0,1);
+(%o9) [0.238468,2.64753066E-15,21,0]
+(%i10) block([fpprec:20],bfloat(abs (%[1] - tval)));
+(%o10) 4.229659b-18
+(%i11) %/tval;
+(%o11) 1.7736772b-17
+\end{myVerbatim} 
+The Maxima coordinator, Robert Dodier has warned about the 
+ lack of accuracy diagnostics with the inner integral done 
+ by \textbf{quad\_qags}:
+\begin{quote}
+A nested numerical integral like this has a couple of drawbacks,
+whatever the method. (1) The estimated error in the inner integral
+isn't taken into account in the error estimate for the outer.
+(2) Methods specifically devised for multi-dimensional integrals
+are typically more efficient than repeated 1-d integrals.
+\end{quote}
+%\newpage
+\subsubsection{ \textbf{quad\_qag} for a General Oscillatory Integrand}
+The function \mv+quad_qag+ is useful primarily due to its
+  ability to deal with functions with some general oscillatory behavior.\\
+
+\noindent The ``key'' feature to watch out for is the required fifth slot argument which
+  the manual calls ``key''.
+This slot can have any integral value between $1$ and $6$ inclusive, with the
+  higher values corresponding to ``higer order Gauss-Kronrod'' integration rules
+  for more complicated oscillatory behavior.\\
+
+\noindent  Use the syntax:
+\begin{myVerbatim2}
+        quad_qag( expr, var, a, b, key, [epsrel, epsabs, limit] )
+\end{myVerbatim2}
+Thus the approximate numerical value of $\mathbf{\int_{0}^{1} e^{x^{2}} \, dx}$ would be the first
+  element of the list returned by\\
+     \mvs+quad_qag ( exp ( x^2 ), x, 0, 1, 3)+  using the ``key'' value \textbf{3}.
+%\newpage
+\subsubsection*{Example 1}
+Since the main feature of \mv+quad_qag+ is the ability to select a high order
+  quadrature method for a generally oscillating integrand, we begin by comparing
+  \mv+quad_qag+ with \mv+quad_qags+ for such a case.
+We consider the integral
+ $\mathbf{\int_{0}^{1} \boldsymbol{\cos}(50\,x) \, \boldsymbol{\sin}(3\,x) \, e^{-x} \, dx}$. 
+\begin{myVerbatim}
+(%i1) (fpprintprec:8,display2d:false)$
+(%i2) f : cos(50*x)*sin(3*x)*exp(-x)$
+(%i3) tval : block ([fpprec:20],bfloat( integrate (f,x,0,1) ));
+(%o3) -1.9145466b-3
+(%i4) (load(draw),load(qdraw))$
+(%i5) qdraw( ex(f,x,0,1) )$
+\end{myVerbatim} 
+Here is that plot:
+\smallskip
+\begin{figure} [h]
+   \centerline{\includegraphics[scale=.6]{ch7p20.eps} }
+	\caption{ $\mathbf{\boldsymbol{\cos}(50\,x)\,\boldsymbol{\sin}(3\,x)\,e^{-x}}$  }
+\end{figure} 
+%\newpage
+\noindent and here we make the comparison. 
+\begin{myVerbatim}
+(%i6) quad_qag(f,x,0,1,6);
+(%o6) [-0.00191455,2.86107558E-15,61,0]
+(%i7) block ([fpprec:20], bfloat(abs(first(%) - tval)));
+(%o7) 9.8573614b-17
+(%i8) %/tval;
+(%o8) -5.148666b-14
+(%i9) quad_qags(f,x,0,1 );
+(%o9) [-0.00191455,2.8536E-15,315,0]
+(%i10) block ([fpprec:20], bfloat(abs(first(%) - tval)));
+(%o10) 1.1804997b-16
+(%i11) %/tval;
+(%o11) -6.1659493b-14
+\end{myVerbatim} 
+We see that both methods returned results with about the same relative error, but that
+  \mv+quad_qag+ needed only about one fifth the number of integrand
+  evaluations as compared with \mv+quad_qags+.
+This extra efficiency of \mv+quad_qag+ for this type of integrand may be
+  of interest in certain kinds of intensive numerical work.
+Naturally, the number of integrand evaluations needed does not necessarily translate simply
+  into time saved, so timing trials would be appropriate when considering this option.
+\newpage
+\subsubsection*{Example 2}
+We compare \mv+quad_qag+ and \mv+quad_qags+ with the numerical evaluation
+  of the integral $\mathbf{\int_{0}^{1} e^{x} \, dx}$, which has neither special oscillatory
+  behavior (which \mv+quad_qag+ might help with) nor singular behavior 
+  (which \mv+quad_qags+ might help with). 
+\begin{myVerbatim}
+(%i12) tval : block ([fpprec:20], bfloat( integrate (exp(x),x,0,1) ));
+(%o12) 1.7182818b0
+(%i13) quad_qag(exp(x),x,0,1,6);
+(%o13) [1.7182818,1.90767605E-14,61,0]
+(%i14) block ([fpprec:20], bfloat(abs(first(%) - tval)));
+(%o14) 1.445648b-16
+(%i15) %/tval;
+(%o15) 8.413335b-17
+(%i16) quad_qags(exp(x),x,0,1);
+(%o16) [1.7182818,1.90767605E-14,21,0]
+(%i17) block ([fpprec:20], bfloat(abs(first(%) - tval)));
+(%o17) 7.7479797b-17
+(%i18) %/tval;
+(%o18) 4.5091437b-17
+\end{myVerbatim} 
+We see that using \mv+quad_qags+ for this function results in slightly smaller relative error
+  while using only two thirds the number of integrand evaluations compared with \mv+quad_qag+.  
+\subsubsection*{Example 3}
+We compare \mv+quad_qag+ and \mv+quad_qags+ with the numerical evaluation
+  of the integral $\mathbf{\int_{0}^{1} \sqrt{x} \; \boldsymbol{\ln}(x) \, dx}$, which has quasi-singular
+  behavior at $\mathbf{x = 0}$. 
+  See Sec.(\ref{qags}) for a plot of this integrand.
+\begin{myVerbatim}
+(%i19) f : sqrt(x)*log(1/x)$
+(%i20) tval : block ([fpprec:20], bfloat( integrate (f,x,0,1) ));
+(%o20) 4.4444444b-1
+(%i21) quad_qag(f,x,0,1,3);
+(%o21) [0.444444,3.17009685E-9,961,0]
+(%i22) block ([fpprec:20], bfloat(abs(first(%) - tval)));
+(%o22) 4.7663293b-12
+(%i23) %/tval;
+(%o23) 1.072424b-11
+(%i24) quad_qags(f,x,0,1);
+(%o24) [0.444444,4.93432455E-16,315,0]
+(%i25) block ([fpprec:20], bfloat(abs(first(%) - tval)));
+(%o25) 8.0182679b-17
+(%i26) %/tval;
+(%o26) 1.8041102b-16
+\end{myVerbatim} 
+We see that using \mv+quad_qags+ for this function (which has a quasi-singular behavior
+  near $\mathbf{x=0}$ ) returns a much smaller relative error while using only one third the number
+  of integrand evaluations compared with \mv+quad_qag+.\\
+  
+\noindent You can use \mv|quad_qag| for numerical double integrals, following the
+  pattern we used with \mv|qaud_qags|, and you can use different methods for each of
+  the two axes.
+\newpage
+\subsubsection{\textbf{quad\_qagi} for a Non-finite Interval  }
+\tcbr{See Sec.(\ref{inf}) for a decision tree for quadrature over
+  a non-finite interval}.\\
+
+\noindent The syntax is
+\begin{myVerbatim2}
+    quad_qagi ( expr, var, a, b, [epsrel, epsabs, limit] ), where
+            (a,b) are the limits of integration.
+  Thus  you will have (omitting the optional args):
+  quad_qagi (expr, var, minf, b ) with b finite,
+  quad_qagi ( expr, var, a, inf ), with a finite, or
+  quad_qagi (expr, var, minf, inf ).
+\end{myVerbatim2}
+If at least one of \textbf{(a,b)} are not equal to \textbf{(minf,inf)}, a noun
+  form will be returned.\\
+  
+\noindent The Maxima function \mv+quad_qagi+ returns the same type of information (approx-integral,
+  est-abs-error, nfe, error-code) in a list that \mv+quad_qags+ returns, and the possible
+  error codes returned have the same meaning.\\  
+
+\noindent Here we test the syntax and behavior with a simple integrand,
+  first over $\mathbf{[0, \infty]}$:
+\begin{myVerbatim}
+
+(%i1) (fpprintprec:8,display2d:false)$
+(%i2) tval : block ([fpprec:20],bfloat( integrate (exp(-x^2),x,0,inf) ));
+(%o2) 8.8622692b-1
+(%i3) quad_qagi(exp(-x^2),x,0,inf);
+(%o3) [0.886227,7.10131839E-9,135,0]
+(%i4) block ([fpprec:20], bfloat(abs(first(%) - tval)));
+(%o4) 7.2688979b-17
+(%i5) %/tval;
+(%o5) 8.202073b-17
+\end{myVerbatim}
+ and next the same simple integrand over $\mathbf{[-\infty, 0]}$: 
+\begin{myVerbatim}
+(%i6) quad_qagi(exp(-x^2),x,minf,0);
+(%o6) [0.886227,7.10131839E-9,135,0]
+(%i7) block ([fpprec:20], bfloat(abs(first(%) - tval)));
+(%o7) 7.2688979b-17
+\end{myVerbatim} 
+and, finally over $\mathbf{[-\infty, \infty]}$:
+\begin{myVerbatim}
+(%i8) tval : block ([fpprec:20],bfloat(2*tval));
+(%o8) 1.7724538b0
+(%i9) quad_qagi(exp(-x^2),x,minf,inf);
+(%o9) [1.7724539,1.42026368E-8,270,0]
+(%i10) block ([fpprec:20], bfloat(abs(first(%) - tval)));
+(%o10) 1.4537795b-16
+\end{myVerbatim}
+\newpage
+\subsubsection*{Example 1}
+Here is another simple example:
+\begin{myVerbatim}
+(%i11) g : exp(-x)*x^(5/100)$
+(%i12) tval : block ([fpprec:20],bfloat( integrate(g,x,0,inf) ));
+(%o12) 9.7350426b-1
+(%i13) quad_qagi(g,x,0,inf);
+(%o13) [0.973504,1.2270015E-9,315,0]
+(%i14) block ([fpprec:20], bfloat(abs(first(%) - tval)));
+(%o14) 7.9340695b-15
+(%i15) %/tval;
+(%o15) 8.15001b-15
+\end{myVerbatim} 
+We see that the use of the default mode (accepting the default \textbf{epsrel:1d-8}
+  and \textbf{epsabs:0} ) has resulted in an absolute error which is close to
+  the floating point limit and a relative error of the same order of magnitude
+  (because the value of the integral is of order $1$). 
+\subsubsection*{Example 2}
+We evaluate the integral $\mathbf{\int_{0}^{\infty}e^{-x}\,\boldsymbol{\ln}(x)\,dx = -\boldsymbol{\gamma}}$, where
+  $\boldsymbol{\gamma}$ is the Euler-Mascheroni constant, \textbf{0.5772156649015329}.
+Maxima has this constant available as \textbf{\%gamma}, although you need to use
+  either \textbf{float} or \textbf{bfloat} to get the numerical value.
+\begin{myVerbatim}
+(%i16) g : exp(-x)*log(x)$
+(%i17) tval : block ([fpprec:20],bfloat( integrate(g,x,0,inf) ));
+(%o17) -5.7721566b-1
+(%i18) quad_qagi(g,x,0,inf);
+(%o18) [-0.577216,5.11052578E-9,345,0]
+(%i19) block ([fpprec:20], bfloat(abs(first(%) - tval)));
+(%o19) 2.6595919b-15
+(%i20) %/tval;
+(%o20) -4.6076226b-15
+\end{myVerbatim}
+\subsubsection*{Example 3}
+A symmetrical version of a Fourier transform pair is defined by the equations
+\begin{equation}
+\mathbf{g(x) = \frac{1}{\sqrt{2\, \boldsymbol{\pi}}} \,\int_{-\infty}^{\infty} G(k)\, e^{i\,k\,x}\,dk}
+\end{equation}
+\begin{equation}
+\mathbf{G(k) = \frac{1}{\sqrt{2\,\boldsymbol{\pi}}} \, \int_{-\infty}^{\infty} g(x)\,e^{-i\,k\,x}\,dx }
+\end{equation}
+An example of such a Fourier transform pair which respects this symmetrical definition
+  is: if $\mathbf{g(x) = a\,e^{-b\,x^{2}}}$, then $\mathbf{G(k) = (a/\sqrt{2\,b})\,e^{-k^{2}/(4\,b)}}$. 
+\begin{myVerbatim}
+(%i21) assume(a>0,b>0,k>0)$
+(%i22) g :a*exp(-b*x^2)$
+(%i23) gft:integrate(exp(-%i*k*x)*g,x,minf,inf)/sqrt(2*%pi);
+(%o23) a*%e^-(k^2/(4*b))/(sqrt(2)*sqrt(b))
+\end{myVerbatim} 
+\newpage
+To check this relation with \mv+quag_qagi+, let's define \textbf{f} to be 
+  \textbf{g} for the case \textbf{a,\,b} and \textbf{k} are all set equal to \textbf{1}. 
+\begin{myVerbatim}
+(%i24) f : subst([a=1,b=1,k=1],g);
+(%o24) %e^-x^2
+(%i25) fft : subst([a=1,b=1,k=1],gft);
+(%o25) %e^-(1/4)/sqrt(2)
+(%i26) float(fft);
+(%o26) 0.550695
+\end{myVerbatim} 
+If we try to submit an explicitly complex integrand to \mv+quad_qagi+ we get
+  a noun form back, indicating failure.
+(A similar result occurs with any quadpack function.). 
+\begin{myVerbatim}
+(%i27) quad_qagi(f*exp(-%i*x),x,minf,inf);
+(%o27) quad_qagi(%e^(-x^2-%i*x),x,minf,inf,epsrel = 1.0E-8,epsabs = 0.0,limit
+                                                                          = 200)
+\end{myVerbatim}
+You can use \mv|quad_qagi| for numerical double integrals, following the pattern
+  we used for \mv|quad_qags|, and you can choose different methods for each of
+  the axes.
+%\ remove qag, add qagp
+\subsection{  Numerical Integration: Sharper Tools}
+There are specialised Quadpack routines for particular kinds of
+  one dimensional integrals.
+\tcbr{See Sec.(\ref{finite}) for a ``decision tree'' for a finite region numerical
+  integral using the Quadpack functions}.
+\subsubsection{\textbf{quad\_qagp} for Internal Integrand Singularities}
+The quadpack function \mv|quad_qagp| is both more efficient and more accurate 
+  than \mv|quad_qags| for the
+  case of integrand singularities interior to the integration interval.
+The syntax is the same as \mv|quad_qags|, except that the fifth argument
+  should be a list of either one or more points where the interior 
+  singularities occur.
+The elements of the points list should evaluate to numbers.\\
+
+\noindent We compare the use of \mv|quad_qagp| and \mv|quad_qags| for the
+numerical value of the integral
+\begin{equation}
+\mathbf{\int_{0}^{3} x^{3} \, \boldsymbol{\ln} \left( \, \left \vert 
+         \left(x^{2} - 1 \right) \, \left(x^{2} - 2 \right) \right \vert \, \right) \, dx}
+\end{equation}
+which has internal singularities of the integrand at $\mathbf{x = 1}$ and
+  $\mathbf{x = \boldsymbol{\sqrt{2}}}$.
+\begin{myVerbatim}
+(%i28) quad_qagp(x^3*log(abs((x^2-1)*(x^2-2))),x,0,3,[1,sqrt(2)]);
+(%o28) [52.740748,2.62476263E-7,1029,0]
+(%i29) quad_qags(x^3*log(abs((x^2-1)*(x^2-2))),x,0,3);
+(%o29) [52.740748,4.08844336E-7,1869,0]
+\end{myVerbatim}
+\subsubsection{\textbf{quad\_qawo} for Fourier Series Coefficients}  \label{qawo}
+This function is the most efficient way to find numerical values of Fourier
+  series coefficients, which require finding integrals  
+  $\mathbf{\int_a^b f(x)\,\boldsymbol{\cos}(\boldsymbol{\omega} \,x)\,dx}$
+  or $\mathbf{\int_a^b f(x)\,\boldsymbol{\sin}(\boldsymbol{\omega} \,x)\,dx}$.\\
+  
+\noindent This function has the syntax
+\begin{myVerbatim2}
+ quad_qawo(expr, var , a, b, omega, trig,[epsrel, epsabs, limit, maxp1])
+\end{myVerbatim2}  
+For the integral 
+  $\mathbf{\int_{-2}^{2} (x + x^{4}) \,\boldsymbol{\cos}(3 \,x)\,dx}$
+  (default options), use \mvf|quad_qawo(x + x^4, x, -2, 2, 3, cos)|.\\
+  
+\noindent For the integral   $\mathbf{\int_{-2}^{2} (x + x^{4}) \,\boldsymbol{\sin}(5 \,x)\,dx}$
+  (default options), use \mvf|quad_qawo(x + x^4, x, -2, 2, 5, sin)|.
+Here we compare \mv+quad_qawo+ with \mv+quad_qags+ for the integral
+  $\mathbf{\int_{-2}^{2} (x + x^{4}) \,\boldsymbol{\cos}(3 \,x)\,dx}$. 
+\begin{myVerbatim}
+(%i1) fpprintprec:8$
+(%i2) g : (x+x^4)*cos(3*x)$
+(%i3) tval : bfloat( integrate(g,x,-2,2) ),fpprec:20;
+(%o3)                             3.6477501b0
+(%i4) quad_qawo(x+x^4,x,-2,2,3,cos);
+(%o4)                       [3.6477502, 0.0, 25, 0]
+(%i5) abs(first(%) - tval),fpprec:20;
+(%o5)                            4.0522056b-18
+(%i6) %/tval,fpprec:20;
+(%o6)                            1.110878b-18
+(%i7) quad_qags(g,x,-2,2); 
+(%o7)                 [3.6477502, 8.89609255E-14, 63, 0]
+(%i8) abs(first(%) - tval),fpprec:20;
+(%o8)                            1.7723046b-15
+(%i9) %/tval,fpprec:20;
+(%o9)                            4.8586239b-16
+\end{myVerbatim} 
+We see that \mv+quad_qawo+ finds the numerical value with ``zero'' relative error
+  as compared with a ``non-zero'' relative error using \mv+quad_qags+, and with many less
+  integrand evaluations.
+\subsubsection{\textbf{quad\_qaws} for End Point Algebraic and Logarithmic Singularities} \label{qaws}
+The syntax is:
+\begin{myVerbatim2}
+   quad_qaws (f(x), x, a, b, alpha, beta, wfun,[epsrel, epsabs, limit])
+\end{myVerbatim2}
+This Maxima function is designed for the efficient evaluation of integrals
+  of the form $\mathbf{\int_{a}^{b} f(x)\, w(x)\,dx}$ in which the appropriate ``singular 
+  end point weight function'' is chosen from among different versions via 
+  the three parameters \textbf{wfun}, $\boldsymbol{\alpha}$ (represented 
+  by \textbf{alpha}), and $\boldsymbol{\beta}$ (represented by \textbf{beta}).\\
+
+\noindent The most general case in which one has both algebraic and logarithmic singularities of
+  the integrand at both end points corresponds to  $\mathbf{\boldsymbol{\alpha} \neq 0}$
+  and $\mathbf{\boldsymbol{\beta} \neq 0}$ and 
+\begin{equation}
+\mathbf{w(x) = (x-a)^{\boldsymbol{\alpha}}\,(b-x)^{\boldsymbol{\beta}} \,\ln(x-a)\, \ln(b-x) }
+\end{equation}  
+The parameters $\boldsymbol{\alpha}$ and $\boldsymbol{\beta}$ govern the ``degree''
+  of algebraic singularity at the end points.
+One needs both $\mathbf{\boldsymbol{\alpha} > -1}$ and $\mathbf{\boldsymbol{\beta} > -1}$ for
+   convergence of the integrals.\\   
+
+\noindent In particular, one can choose $\mathbf{\boldsymbol{\alpha} = 0}$ and/or 
+  $\mathbf{\boldsymbol{\beta} =0}$
+  to handle an algebraic singularity at only one end of the interval or
+  no algebraic singularities at all.\\
+  
+\noindent The parameter \textbf{wfun} determines the existence and location of possible
+  end point logarithmic singularities of the integrand.  
+\begin{center}
+  \begin{tabular}{cc}
+    wfun & w(x) \\
+	\hline
+	1 & $\mathbf{(x-a)^{\boldsymbol{\alpha}}\,(b-x)^{\boldsymbol{\beta}}}$ \\
+	2 & $\mathbf{(x-a)^{\boldsymbol{\alpha}}\,(b-x)^{\boldsymbol{\beta}} \,\boldsymbol{\ln}(x-a)}$ \\
+	3 & $\mathbf{(x-a)^{\boldsymbol{\alpha}}\,(b-x)^{\boldsymbol{\beta}} \, \boldsymbol{\ln}(b-x)}$ \\
+	4 & $\mathbf{(x-a)^{\boldsymbol{\alpha}}\,(b-x)^{\boldsymbol{\beta}} \,\boldsymbol{\ln(x-a)\, \ln(b-x)}}$ \\ 
+   \end{tabular}
+\end{center}
+\subsubsection*{Example 1: Pure Logarithmic Singularities}
+For the case that $\mathbf{\boldsymbol{\alpha} = 0 }$ 
+   and $\mathbf{\boldsymbol{\beta} = 0}$, there are
+  no end point algebraic singularities, only logarithmic singularities.
+A simple example is $\mathbf{\int_{0}^{1} \boldsymbol{\ln}(x) \, dx}$, which 
+   corresponds to $\mathbf{wfun = 2}$: 
+\begin{myVerbatim}
+(%i1) fpprintprec:8$
+(%i2) tval : bfloat( integrate(log(x),x,0,1) ),fpprec:20;
+(%o2)                               - 1.0b0
+(%i3) quad_qaws(1,x,0,1,0,0,2);
+(%o3)                   [- 1.0, 9.68809031E-15, 40, 0]
+(%i4) abs(first(%) - tval),fpprec:20;
+(%o4)                                0.0b0
+(%i5) quad_qags(log(x),x,0,1);
+(%o5)                   [- 1.0, 1.11022302E-15, 231, 0]
+(%i6) abs(first(%) - tval),fpprec:20;
+(%o6)                                0.0b0
+\end{myVerbatim} 
+which illustrates the efficiency of \mv+quad_qaws+ compared to \mv+quad_qags+
+  for this type of integrand.
+\subsubsection*{Example 2: Pure Algebraic Singularity }
+The case $\mathbf{wfun} = 1$ corresponds to purely algebraic
+  end point singularities.  \\
+
+\noindent Here we compare \mv+quad_qaws+ with \mv+quad_qags+ for
+  the evaluation of the integral $\mathbf{\int_{0}^{1} \frac{\boldsymbol{\sin}(x)}{\sqrt{x}}\, dx}$.
+You will get an exact symbolic answer in terms of \textbf{erf(z)} for this 
+  integral from \textbf{integrate}.
+% check bfloat erf(z) with next version of maxima : ver 18.1 doesn't cure
+% the problem of getting everything numerical.
+\begin{myVerbatim}
+(%i7) expand(bfloat(integrate(sin(x)/sqrt(x),x,0,1))),fpprec:20;
+(%o7)       1.717976b0 cos(0.25 %pi) - 8.404048b-1 sin(0.25 %pi)
+(%i8) tval : bfloat(%),fpprec:20;
+(%o8)                            6.205366b-1
+(%i9) quad_qaws(sin(x),x,0,1,-1/2,0,1);
+(%o9)                 [0.620537, 4.31887834E-15, 40, 0]
+(%i10) abs(first(%) - tval),fpprec:20;
+(%o10)                           8.8091426b-19
+(%i11) %/tval,fpprec:20;
+(%o11)                           1.4196008b-18
+(%i12) quad_qags(sin(x)/sqrt(x),x,0,1);
+(%o12)                [0.620537, 3.48387985E-13, 231, 0]
+(%i13) abs(first(%) - tval),fpprec:20;
+(%o13)                           1.1014138b-16
+(%i14) %/tval,fpprec:20;
+(%o14)                           1.7749378b-16
+\end{myVerbatim} 
+We see that \mv+quad_qaws+ uses about one sixth the number of function evaluations
+  (as compared with \mv+quad_qags+) and returns a much more accurate answer.
+\subsubsection*{Example 3: Both Algebraic and Logarithmic Singularity at an End Point }
+A simple example is $\mathbf{\int_{0}^{1} \frac{ \boldsymbol{\ln(x)}} {\sqrt{x} }\, dx}$.
+The integrand is singular at $\mathbf{x = 0}$ but this is an ``integrable singularity''
+  since $\mathbf{\sqrt{x} \; \boldsymbol{\ln}(x) \rightarrow 0}$ 
+   as $\mathbf{x \rightarrow 0^{+}}$.
+\begin{myVerbatim}
+(%i1) fpprintprec:8$
+(%i2) limit(log(x)/sqrt(x),x,0,plus);
+(%o2)                                minf
+\end{myVerbatim}
+\newpage
+\begin{myVerbatim}
+(%i3) integrate(log(x)/sqrt(x),x);
+(%o3)                   2 (sqrt(x) log(x) - 2 sqrt(x))
+(%i4) limit(%,x,0,plus);
+(%o4)                                  0
+(%i5) tval : bfloat( integrate(log(x)/sqrt(x),x,0,1)),fpprec:20;
+(%o5)                               - 4.0b0
+(%i6) quad_qaws(1,x,0,1,-1/2,0,2);
+(%o6)                   [- 4.0, 3.59396672E-13, 40, 0]
+(%i7) abs(first(%) - tval),fpprec:20;
+(%o7)                                0.0b0
+(%i8) quad_qags(log(x)/sqrt(x),x,0,1);
+(%o8)                   [- 4.0, 1.94066985E-13, 315, 0]
+(%i9) abs(first(%) - tval),fpprec:20;
+(%o9)                            2.6645352b-15
+(%i10) %/tval,fpprec:20;
+(%o10)                          - 6.6613381b-16
+\end{myVerbatim} 
+Again we see the relative efficiency and accuracy of \mv+quad_qaws+ for this type
+  of integral.
+\subsubsection{\textbf{quad\_qawc} for a Cauchy Principal Value Integral}
+This function has the syntax: 
+\begin{myVerbatim2}
+        quad_qawc (f(x), x, c, a, b,[epsrel, epsabs, limit]). 
+\end{myVerbatim2}
+\noindent The actual integrand is $\mathbf{g(x) = f(x)/(x - c)}$, 
+  with dependent variable \textbf{x}, to be integrated over 
+  the interval $\mathbf{[a, b]}$ and you need to pick out $\mathbf{f(x)}$
+  by hand here.
+In using \mv+quad_qawc+, the argument $\mathbf{c}$ is placed between  
+   the name of the variable of integration (here \textbf{x}) and
+   the lower limit of integration.\\
+
+\noindent An integral with a ``pole'' on the contour does not exist in the
+  strict sense, but if $\mathbf{g(x)}$ has a simple pole on the real axis
+   at $\mathbf{x = c }$, one defines the
+  Cauchy principal value as the symmetrical limit (with $\mathbf{a < c < b}$)
+\begin{equation}  \label{Eq:pval}
+\mathbf{P \,\int_{a}^{b} g(x)\, dx = 
+   \lim_{\boldsymbol{\epsilon} \rightarrow 0^{+}} 
+   \left[ \int_{a}^{c - \boldsymbol{\epsilon}} g(x) \, dx + 
+           \int_{c + \boldsymbol{\epsilon}}^{b} g(x) \, dx \right] }
+\end{equation}  
+  provided this limit exists.
+In terms of $\mathbf{f(x)}$ this definition becomes  
+\begin{equation}
+\mathbf{P \,\int_{a}^{b} \frac{f(x)}{x - c} \, dx = 
+   \lim_{\boldsymbol{\epsilon} \rightarrow 0^{+}} 
+   \left[ \int_{a}^{c - \boldsymbol{\epsilon}} \frac{f(x)}{x - c} \, dx + 
+           \int_{c + \boldsymbol{\epsilon}}^{b} \frac{f(x)}{x - c} \, dx \right] }
+\end{equation}
+%\newpage
+We can find the default values of the optional method parameters of \mv+quad_qawc+ by
+  including an undefined symbol in our call:
+\begin{myVerbatim}
+(%i11) quad_qawc(1/(x^2-1),x,1,0,b);
+                  1
+(%o11) quad_qawc(------, x, 1, 0, b, epsrel = 1.0E-8, epsabs = 0.0, limit = 200)
+                 2
+                x  - 1
+\end{myVerbatim}
+We see that the default settings cause the algorithm to look at the relative 
+  error of succeeding approximations to the numerical answer.\\
+
+\noindent As a simple example of the syntax we consider the principal value integral
+\begin{equation}
+\mathbf{P \, \int_{0}^{2} \frac{1}{x^{2} -1} \,dx = 
+          P \, \int_{0}^{2} \frac{1}{(x-1)\,(x+1)} \,dx = - \boldsymbol{\ln}(3)/2 }
+\end{equation}
+We use \textbf{assume} to prep \textbf{integrate} and then implement
+  the basic definition provided by Eq. (\ref{Eq:pval})	
+\begin{myVerbatim}
+(%i1) fpprintprec:8$
+(%i2) assume(eps>0, eps<1)$
+(%i3) integrate(1/(x^2-1),x,0,1-eps) +
+               integrate(1/(x^2-1),x,1+eps,2);
+                     log(eps + 2)   log(2 - eps)   log(3)
+(%o3)                ------------ - ------------ - ------
+                          2              2           2
+(%i4) limit(%,eps,0,plus);
+                                     log(3)
+(%o4)                              - ------
+                                       2
+(%i5) tval : bfloat(%),fpprec:20;
+(%o5)                           - 5.4930614b-1
+\end{myVerbatim}
+We now compare the result returned by \textbf{integrate} with the numerical
+  value returned by \mv+quad_qawc+, noting that $\mathbf{f(x) = 1/(1+x)}$.
+\begin{myVerbatim}
+(%i6) quad_qawc(1/(1+x),x,1,0,2);
+(%o6)                [- 0.549306, 1.51336373E-11, 105, 0]
+(%i7) abs(first(%) - tval),fpprec:20;
+(%o7)                            6.5665382b-17
+(%i8) %/tval,fpprec:20;
+(%o8)                           - 1.1954241b-16
+\end{myVerbatim}
+We see that the relative error of the returned answer is much less than
+  the (default) requested minimum relative error.\\
+  
+\noindent If we run \mv+quad_qawc+ requesting that convergence be based
+  on absolute error instead of relative error,
+\begin{myVerbatim}
+(%i9) quad_qawc(1/(1+x),x,1,0,2,epsabs=1.0e-10,epsrel=0.0);
+(%o9)                [- 0.549306, 1.51336373E-11, 105, 0]
+(%i10) abs(first(%) - tval),fpprec:20;
+(%o10)                           6.5665382b-17
+(%i11) %/tval,fpprec:20;
+(%o11)                          - 1.1954241b-16
+\end{myVerbatim}
+we see no significant difference in the returned accuracy, and again we
+  see that the absolute error of the returned answer is much less than
+  the requested minimum absolute error.  
+\newpage
+\subsubsection{\textbf{quad\_qawf} for a Semi-Infinite Range Cosine or Sine Fourier Transform}
+The function \mv+quad_qawf+ calculates a Fourier cosine \emph{or} 
+   Fourier sine transform (up to an overall normalization factor) on the 
+   semi-infinite interval $\mathbf{[a, \infty]}$.
+If we let \textbf{w} stand for the angular frequency in radians,
+  the integrand is \textbf{f(x)*cos(w*x)} if the \textbf{trig} parameter is \textbf{cos},
+  and the integrand is \textbf{f(x)*sin(w*x)} if the \textbf{trig} parameter is \textbf{sin}.\\
+
+\noindent The calling syntax is 
+\begin{myVerbatim2}
+     quad_qawf (f(x), x, a, w, trig, [epsabs, limit, maxp1, limlst]) 
+\end{myVerbatim2}
+Thus \mvs|quad_qawf (f(x), x, 0, w, 'cos)| will find a numerical approximation
+  to the integral
+\begin{equation}
+\mathbf{ \int_{0}^{\infty} f(x)\, \boldsymbol{\cos} (w \, x) \, dx }
+\end{equation}
+If we call \mv+quad_qawf+ with undefined parameter(s), we get a look at the
+  default values of the optional method parameters:
+\begin{myVerbatim}
+(%i12) quad_qawf(exp(-a*x),x,0,w,'cos);
+                  - a x
+(%o12) quad_qawf(%e     , x, 0, w, cos, epsabs = 1.0E-10, limit = 200, 
+                                                      maxp1 = 100, limlst = 10)
+\end{myVerbatim}
+%\newpage
+\noindent The manual has the optional parameter information:
+\begin{myVerbatim2f}
+The keyword arguments are optional and may be specified in any order.
+They all take the form keyword = val. The keyword arguments are: 
+1. epsabs, the desired absolute error of approximation. Default is 1d-10. 
+2. limit, the size of the internal work array. 
+   (limit - limlst)/2 is the maximum number of 
+   subintervals to use. The default value of limit is 200. 
+3. maxp1, the maximum number of Chebyshev moments. 
+      Must be greater than 0. Default is 100. 
+4. limlst, upper bound on the number of cycles. 
+    Must be greater than or equal to 3. Default is 10. 
+\end{myVerbatim2f}
+The manual does not define the meaning of ``cycles''.
+There is no ``epsrel'' parameter used for this function.\\
+
+\noindent Here is the manual example, organised in our way.
+In this example $\mathbf{w = 1}$ and $\mathbf{a = 0}$.
+\begin{myVerbatim}
+(%i1) fpprintprec:8$
+(%i2) integrate (exp(-x^2)*cos(x), x, 0, inf);
+                                 - 1/4
+                               %e      sqrt(%pi)
+(%o2)                          -----------------
+                                       2
+(%i3) tval : bfloat(%),fpprec:20;
+(%o3)                            6.9019422b-1
+(%i4) quad_qawf (exp(-x^2), x, 0, 1, 'cos );
+(%o4)                 [0.690194, 2.84846299E-11, 215, 0]
+(%i5) abs(first(%) - tval),fpprec:20;
+(%o5)                            3.909904b-17
+(%i6) %/tval,fpprec:20;
+(%o6)                            5.664933b-17
+\end{myVerbatim}
+We see that the absolute error of the returned answer is much less than
+  the (default) requested minimum absolute error.
+% from raymond toy:
+%There is no limlst for qag and
+%qags.  So limit defaults to 200 and is the maximum number of subintervals.
+%limlst appears to be only used by qawf.
+\subsection{   Finite Region of Integration Decision Tree}  \label{finite}
+If you are in a hurry, use \mv+quad_qags+.
+\footnote{ These ``decision trees'' are adapted from the web page\\
+  \mvf|http://people.scs.fsu.edu/$\sim$burkardt/f77\_src/quadpack/quadpack.html|.} \\
+ 
+\noindent \tcbr{If your definite integral is over a finite region of integration}
+    \textbf{[a, b]}, then%
+\begin{enumerate}
+   \item If the integrand has the form \textbf{w(x)*f(x)}, where \textbf{f(x)} is a smooth function
+           over the region of integration, then
+	\begin{itemize}
+        \item 	If  \textbf{w(x)} has the form of either \textbf{ cos( c*x )} 
+		or \textbf{sin( c*x )}, where \textbf{c} is a constant, use \mv+quad_qawo+.
+		\item  Else if the factor \textbf{w(x)} has the form (note the limits of integration
+		  are \textbf{[ a, b ]}
+\begin{myVerbatim2s}
+    (x - a)^ae * (b - x)^be * (log(x - a))^na * (log(b - x))^nb
+\end{myVerbatim2s}
+  where \textbf{na}, \textbf{nb} have the values \textbf{0} or \textbf{1}, 
+   and both \textbf{ae} and \textbf{be} are greater than $\mathbf{-1}$, 
+   then use \mv+quad_qaws+.		 
+(This is a case where we need a routine which is designed to
+		                handle  end point singularities.)
+		\item Else if the factor \textbf{w(x)} is \textbf{1/(x - c)} for 
+		some constant \textbf{c} with $\mathbf{a < c < b}$, then 
+		use \mv+quad_qawc+, the Cauchy principle value
+		routine.
+       \end{itemize}
+    \item 	Otherwise, if you do not care too much about possible inefficient
+       use of computer time, and do not want to further analyze the
+	   problem, use \mv+quad_qags+. 
+    \item Otherwise, if the integrand is \textbf{smooth}, use \mv+quad_qag+.
+	\item Otherwise, if there are \textbf{discontinuities or singularities} of the integrand 
+      or of the derivative of the integrand, and you know where they are,
+	  split the integration range at these points and separately integrate
+      over each subinterval.
+    \item Otherwise, if the integrand has \textbf{end point singularities}, 
+	  use \mv+quad_qags+. 
+    \item Otherwise, if the integrand has an oscillatory behavior of nonspecific type,
+         and no singularities, use \mv+quad_qag+ with 
+		 the fifth \textbf{key} slot containing the value \textbf{6}. 	   
+	\item 	 Otherwise, use \mv+quad_qags+. 
+\end{enumerate} 
+\newpage
+\subsection{Non-Finite Region of Integration Decision Tree } \label{inf}   
+Here is the tree for the non-finite domain case:
+\begin{myVerbatim2s} 
+A.  If the integration domain is non-finite consider first making a
+       suitable change of variables to obtain a finite domain and 
+	   using the finite interval decision tree described above.
+
+B.  Otherwise, if the integrand decays rapidly to zero, truncate the
+      integration interval and use the finite interval decision tree. 
+	  
+C.  Otherwise, if the integrand oscillates over the entire non-finite range,
+
+       1. If integral is a Fourier transform, use quad_qawf. 
+
+       2. else if the integral is not a Fourier transform, then sum the
+           successive positive and negative contributions by integrating
+           between the zeroes of the integrand, using the finite 
+           interval criteria.
+  
+D.  Otherwise, if you are not constrained by computer time, and do not
+     wish to analyze the problem further, use quad_qagi. 
+
+E.  Otherwise, if the integrand has a non-smooth behavior in the range of
+     integration, and you know where it occurs, split off these regions
+     and use the appropriate finite range routines to integrate over them.
+     Then begin this non-finite case tree again to handle the remainder
+	 of the region. 
+
+F.  Otherwise, truncation of the interval, or application of a suitable
+     transformation for reducing the problem to a finite range may be 
+     possible.
+		  
+G.  Otherwise use quad_qagi. 
+\end{myVerbatim2s}
+\end{document}

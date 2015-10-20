@@ -1,0 +1,16 @@
+#!/bin/bash
+
+site="http://web.csulb.edu/~woollett"
+
+f=maxima_by_example.html
+echo $f
+wget -c $site/index.html -O $f -o .log
+
+mkdir -p files/
+while read f
+do
+  echo $f
+  [ "$f" ] && wget -c $site/$f -P files/ -o .log
+done < <(cat .list | sed '/#/d')
+
+# EOF

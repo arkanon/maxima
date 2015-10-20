@@ -1,0 +1,276 @@
+% e. woollett
+%
+%   2009,2010,2011
+% file dirac2.tex  Dirac package version 2
+% ch. 12 Dirac Algebra and Quantum Electrodynamics
+% edit with Notepad++, then load into LED for latexing
+\documentclass[11pt]{article}
+\usepackage[dvips,top=1.5cm,left=1.5cm,right=1.5cm,foot=1cm,bottom=1.5cm]{geometry}
+\usepackage{times,amsmath,amsbsy,graphicx,fancyvrb,url}
+\usepackage[usenames]{color}
+\usepackage{slashed}
+%\definecolor{MyDarkBlue}{rgb}{0,0.08,0.45}
+\definecolor{mdb}{rgb}{0.1,0,0.55}
+\newcommand{\tcdb}{\textcolor{mdb}}
+\newcommand{\tcbr}{\textcolor{BrickRed}}
+\newcommand{\tcb}{\textcolor{blue}}
+\newcommand{\tcr}{\textcolor{red}}
+\urldef\tedhome\url{ http://www.csulb.edu/~woollett/  }
+\urldef\tedmail\url{ woollett@charter.net}
+%1.  this is for maxima code: red framed bold, footnotesize 
+\DefineVerbatimEnvironment%
+   {myVerbatim}%
+   {Verbatim}%
+   {fontfamily=courier,fontseries=b,fontsize=\footnotesize ,frame=single,rulecolor=\color{BrickRed}}
+\DefineVerbatimEnvironment%
+   {myVerbatim1}%
+   {Verbatim}%
+   {fontfamily=courier,fontseries=b,fontsize=\scriptsize ,frame=single,rulecolor=\color{BrickRed}}
+%2.  this is for blue framed bold 
+\DefineVerbatimEnvironment%
+   {myVerbatim2}%
+   {Verbatim}%
+   {fontfamily=courier,fontseries=b,frame=single,rulecolor=\color{blue}}
+\DefineVerbatimEnvironment%
+   {myVerbatim2s}%
+   {Verbatim}%
+   {fontfamily=courier,fontseries=b,fontsize=\small,frame=single,rulecolor=\color{blue}}
+\DefineVerbatimEnvironment%
+   {myVerbatim2f}%
+   {Verbatim}%
+   {fontfamily=courier,fontseries=b,fontsize=\footnotesize,frame=single,rulecolor=\color{blue}}
+% 3.  this is for black framed  bold
+\DefineVerbatimEnvironment%
+   {myVerbatim3}%
+   {Verbatim}%
+   {fontfamily= courier, fontseries=b, frame=single}
+% 4.  this is for no frame bold
+\DefineVerbatimEnvironment%
+   {myVerbatim4}%
+   {Verbatim}%
+   {fontfamily=courier, fontseries=b,fontsize=\small}
+% 6.  for defaults use usual verbatim
+%\newcommand{\Feyn}[1]{#1\kern-0.45em/}
+\newcommand{\Feyn}[1]{#1\kern-0.5em/}
+\newcommand{\mv}{\Verb[fontfamily=courier,fontseries=b]}
+\newcommand{\mvs}{\Verb[fontfamily=courier,fontseries=b,fontsize=\small]}
+\newcommand{\mvf}{\Verb[fontfamily=courier,fontseries=b,fontsize=\footnotesize]}
+
+\renewcommand{\thefootnote}{\ensuremath{\fnsymbol{footnote}}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%   title page
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\title{Maxima by Example:\\ Ch. 12, Dirac Algebra and Quantum Electrodynamics
+             \thanks{This version uses \textbf{Maxima 5.23.2} \;
+			 Check \; \textbf{ \tedhome } \; for the latest version of these notes. Send comments and
+			 suggestions to \textbf{\tedmail} } }
+
+%\author{Edwin L. Woollett \thanks{Dept. of Physics and Astron, Calif. State University at Long Beach,\\
+%                    author's email: \tedmail} }
+\author{Edwin L. Woollett}
+\date{\today}
+%\date{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%          document
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+%\SMALL
+%\small
+\maketitle
+\tableofcontents
+\numberwithin{equation}{section}
+\newpage
+%\normalsize
+\subsubsection*{Preface}
+\begin{myVerbatim2s} 
+COPYING AND DISTRIBUTION POLICY    
+This document is part of a series of notes titled
+"Maxima by Example" and is made available
+via the author's webpage http://www.csulb.edu/~woollett/
+to aid new users of the Maxima computer algebra system.	
+	
+NON-PROFIT PRINTING AND DISTRIBUTION IS PERMITTED.
+	
+You may make copies of this document and distribute them
+to others as long as you charge no more than the costs of printing.	
+
+These notes (with some modifications) will be published in book form
+eventually via Lulu.com in an arrangement which will continue
+to allow unlimited free download of the pdf files as well as the option
+of ordering a low cost paperbound version of these notes.
+\end{myVerbatim2s}	
+\smallskip
+\noindent \tcbr{Feedback from readers is the best way for this series of notes
+  to become more helpful to new users of Maxima}.
+\tcdb{\emph{All} comments and suggestions for improvements will be appreciated and
+  carefully considered}.
+\smallskip
+\begin{myVerbatim2s}
+LOADING FILES
+The defaults allow you to use the brief version load(fft) to load in the
+Maxima file fft.lisp.
+To load in your own file, such as qxxx.mac 
+using the brief version load(qxxx), you either need to place 
+qxxx.mac in one of the folders Maxima searches by default, or
+else put a line like:
+  
+file_search_maxima : append(["c:/work2/###.{mac,mc}"],file_search_maxima )$
+  
+in your personal startup file maxima-init.mac (see later in this chapter
+for more information about this).
+
+Otherwise you need to provide a complete path in double quotes,
+as in load("c:/work2/qxxx.mac"),
+ 
+We always use the brief load version in our examples, which are generated 
+using the XMaxima graphics interface on a Windows XP computer, and copied
+into a fancy verbatim environment in a latex file which uses the fancyvrb
+and color packages.
+\end{myVerbatim2s} 
+\smallskip
+\begin{myVerbatim2s}
+Maxima.sourceforge.net. Maxima, a Computer Algebra System. Version 5.23.2
+ (2011). http://maxima.sourceforge.net/
+\end{myVerbatim2s}   
+\large
+The author would like to thank Maxima developer Barton Willis for his
+  initial suggestion to use the Maxima code file \mv|simplifying.lisp| and his
+  patient help in understanding how to make use of that code.
+\normalsize
+The new code has also been simplified (as compared with the rather long-winded
+  code in version 1) by using a set of functions shared by Barton Willis which
+  are used in making decision branches.
+These functions are
+\begin{myVerbatim2}
+  mplusp, mtimesp, mnctimesp, mexptp, mncexptp.
+\end{myVerbatim2}
+(The ``nc'' additions refer to ``non-commutative'').
+General expansions of multiple term arguments have been simplified
+ by using Barton Willis' methods which combine \mv|lambda| and \mv|xreduce|.
+\newpage
+\setcounter{section}{12}
+\pagestyle{headings}
+\subsection{References}
+The following works are useful sources.
+Some abbreviations (which will be used in the following sections) are defined here.
+\begin{itemize}
+\item Aitchison, I.J.R., Relativistic Quantum Mechanics, Barnes and Noble,1972
+\item A/H: Aitchison,I.J.R, and Hey, A.J.G., Gauge Theories in Particle
+  Physics, Adam Hilger, 1989
+\item B/D: Bjorken, James D. and Drell, Sidney D, Relativistic Quantum
+  Mechanics, McGraw Hill, 1964
+\item BLP: Berestetskii, V. B, Lifshitz, E. M., and Pitaevskii, L. P.,
+  Quantum Electrodynamics, Course of Theoretical Physics, Vol. 4, 2nd. Ed.
+  Pergamon Press, 1982
+\item  Berestetskii, V. B, Lifshitz, E. M., and Pitaevskii, L. P.,
+  Relativistic Quantum Theory, Part 1, Course of Theoretical Physics, Vol. 4, 
+  Pergamon Press, 1971
+\item De Wit, B. and Smith, J., Field Theory in Particle Physics, 
+          North-Holland, 1986
+\item G/R:  Greiner, Walter, and Reinhardt, Joachim, Quantum Electrodynamics,
+   fourth ed., Springer, 2009
+\item  Griffiths, Introduction to Elementary Particles, Harper and Row,
+       1987
+\item H/M: Halzen, Francis and Martin, Alan D., Quarks and Leptons,
+         John Wiley, 1984
+\item I/Z: Itzykson, Claude and Zuber, Jean-Bernard, Quantum Field Theory, 
+        McGraw-Hill, 1980
+\item Jauch, J.M., and Rohrlich, F., The Theory of Photons and Electrons,
+    Second Expanded Edition, Springer-Verlag, 1976
+\item Kaku, Michio, Quantum Field Theory, Oxford Univ. Press, 1993
+\item Maggiore, Michele, A Modern Introduction to Quantum Field Theory,
+    Oxford Univ. Press, 2005
+\item P/S: Peskin, Michael E. and Schroeder, Daniel V., An Introduction
+  to Quantum Field Theory, Addison-Wesley, 1995
+\item Quigg, Chris, Gauge Theories of the Strong, Weak, and Electromagnetic
+  Interactions, Benjamin/Cummings, 1983
+\item Renton, Peter, Electroweak Interactions, Cambridge Univ. Press, 1990
+\item Schwinger, Julian, Particles, Sources, and Fields, Vol. 1,
+          Addison-Wesley, 1970
+\item Sterman, George, An Introduction to Quantum Field Theory,
+        Cambridge Univ. Press, 1993
+\item Weinberg, Steven, The Quantum Theory of Fields, Vol.I,
+          Cambridge Univ. Press, 1995
+\end{itemize}
+\subsection{High Energy Physics Notation Conventions}
+We use the same conventions as P/S (Peskin and Schroeder) and
+  Maggiore, {\large $\mathbf{\boldsymbol{\epsilon} ^{0 1 2 3}} = + 1$}, 
+  the electromagnetic units are Heaviside-Lorentz, and natural units
+  are used, so {\large $\mathbf{e^2 = 4 \boldsymbol{\pi \alpha}}$}.\\
+  
+\noindent The only exception is that we interpret the Feynman rules as
+ an expression for the quantity {\large $-i\,M$},
+ following the conventions of Griffiths, and Halzen/Martin.\\
+ 
+\noindent The diagonal elements of the metric
+  tensor are {\large $(1,-1,-1,-1)$}, and the helicity (chiral) representation
+  used for explicit matrix methods with the Dirac gamma matrices is
+  (in $2\,\times \,2$ block form)
+\Large
+\begin{equation}
+ \gamma^{0} = \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}, \quad
+ \gamma^{j} = \begin{pmatrix} 0 & \sigma^{j} \\ -\sigma^{j} & 0 \end{pmatrix}, \quad
+  \gamma^{5} = \begin{pmatrix} -1 & 0 \\ 0 & 1 \end{pmatrix},
+\end{equation}
+\normalsize
+  in which {\large $\sigma^{j}$} for {\large $ j = 1, 2, 3$} are the $2\,\times \,2$ Pauli matrices
+\Large
+\begin{equation}
+ \sigma^{1} = \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}, \quad
+ \sigma^{2} = \begin{pmatrix} 0 & -i \\ i & 0 \end{pmatrix}, \quad
+  \sigma^{3} = \begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix}.
+\end{equation}
+\normalsize
+The above form for {\large $\boldsymbol{\gamma^{5}}$} is equivalent to
+\Large
+\begin{equation}
+ \boldsymbol{\gamma^{5}} = \boldsymbol{ i\, \gamma^{0}\,\gamma^{1}\,\gamma^{2}\,\gamma^{3}}.
+\end{equation}
+\normalsize
+The lepton Dirac spinor is the four element column matrix {\large $u(p,\sigma)$}  
+    where {\large $\sigma = +1$} picks out positive helicity {\large $h = +1/2$}
+  and {\large $\sigma = -1$} picks out negative helicity {\large $h = -1/2$}.
+The corresponding barred particle spinor is a four element row matrix
+\Large
+\begin{equation}
+\bar{u}(p,\sigma) = u^{\dagger}\,\gamma^{0}
+\end{equation}
+\normalsize  
+  and the particle Dirac spinor normalization  is
+\Large
+\begin{equation}
+ \bar{u}(p,\sigma)\,u(p,\sigma^{\prime}) = 2\,m\,\delta_{\sigma\,\sigma^{\prime}}, \quad
+  \sigma, \, \sigma^{\prime} = \pm 1,
+\end{equation}
+\normalsize  
+and we also have
+\Large
+\begin{equation}
+ \sum_{\sigma} \,u(p,\sigma)\, \bar{u}(p,\sigma) = \Feyn{p} + m,
+\end{equation}
+\normalsize
+in which a $4 \times 4$ unit matrix is understood to be multiplying
+  the scalar mass symbol {\large $m$}, and
+  {\large $\Feyn{p} = p_{\mu}\,\gamma^{\mu}$} with use of the
+  summation convention.\\
+
+\noindent The antilepton Dirac spinor is the four element column matrix {\large $v(p,\sigma)$}
+  in which {\large $\sigma = +1$} picks out the positive helicity {\large $h = +1/2$} antiparticle
+  state and {\large $\sigma = -1$} picks out negative helicity {\large $h = -1/2$}
+  antiparticle state, is defined (with P/S phase choice) via
+\Large
+\begin{equation}
+ v(p,\sigma) = - \gamma^{5}\,u (p,-\sigma)
+\end{equation}
+\normalsize  
+The corresponding barred antiparticle spinor is a four element row matrix
+\Large
+\begin{equation}
+\bar{v}(p,\sigma) = v^{\dagger}\,\gamma^{0}
+\end{equation}
+\normalsize  
+and the normalization is
+\Large
+\begin{equation}
+ \bar{v}(p,\sigma)\,v(p,\sigma^{\prime}) 

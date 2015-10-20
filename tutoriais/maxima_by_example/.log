@@ -1,0 +1,9 @@
+--2015-10-12 22:25:46--  http://web.csulb.edu/~woollett/mbe9bfloat.tex
+Resolvendo web.csulb.edu (web.csulb.edu)... 134.139.19.49
+Conectando-se a web.csulb.edu (web.csulb.edu)|134.139.19.49|:80... conectado.
+A requisição HTTP foi enviada, aguardando resposta... 206 Partial Content
+Tamanho: 92101 (90K), 18253 (18K) restantes [application/x-tex]
+Salvando em: “files/mbe9bfloat.tex”
+
+        [ ignorando 50K ]
+    50K ,,,,,,,,,, ,,,,,,,,,, ,,
