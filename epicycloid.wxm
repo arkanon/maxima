@@ -1,0 +1,53 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 22.04.0 ] */
+/* [wxMaxima: comment start ]
+http://math.hawaii.edu/~dave/wxMaxima/parametric_plot.pdf#page=7
+http://math.hawaii.edu/~dave/wxMaxima/parametric_plot.wxm
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+n : 90$
+
+with_slider_draw
+(
+
+  ang,
+  makelist(i,i,0,n)*2*%pi/n,
+
+  proportional_axes = xy,
+  dimensions        = [400,400],
+  xrange            = [-10,10],
+  yrange            = [-11,10],
+  nticks            = 100,
+  xtics             = {0},
+  ytics             = {0},
+  axis_top          = false,
+  axis_bottom       = false,
+  axis_right        = false,
+  axis_left         = false,
+  xaxis             = true,
+  yaxis             = true,
+
+  color         = red,
+  parametric(6*cos(u),6*sin(u), u,0,2*%pi ),
+  parametric( (6+2)*sin(ang)+2*cos(u),(6+2)*cos(ang)+2*sin(u),u,0,2*%pi ),
+
+  color         = blue,
+  line_width    = 2,
+  parametric( (6+2)*sin(a)  -2*sin(a*(1+6/2)) , (6+2)*cos(a  )-2*cos(a*(1+6/2)),a,0,ang),
+
+  color         = black,
+  point_size    = 1,
+  point_type    = filled_circle,
+  points_joined = true,
+  line_width    = 1,
+  points( [ [0,0], (6+2)*[sin(ang),cos(ang)]  , [(6+2)*sin(ang)-2*sin(ang*(1+6/2)) , (6+2)*cos(ang)-2*cos(ang*(1+6/2))] ] )
+
+)$
+/* [wxMaxima: input   end   ] */
+
+
+
+/* Old versions of Maxima abort on loading files that end in a comment. */
+"Created with wxMaxima 22.04.0"$
