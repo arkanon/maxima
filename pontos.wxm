@@ -1,0 +1,90 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 22.04.0 ] */
+/* [wxMaxima: comment start ]
+Cores:
+
+white            black            gray0            grey0 
+gray10           grey10           gray20           grey20     
+gray30           grey30           gray40           grey40     
+gray50           grey50           gray60           grey60     
+gray70           grey70           gray80           grey80
+gray90           grey90           gray100          grey100 
+gray             grey             light_gray       light_grey 
+dark_gray        dark_grey        red              light_red 
+dark_red         yellow           light_yellow     dark_yellow
+green            light_green      dark_green       spring_green
+forest_green     sea_green        blue             light_blue 
+dark_blue        midnight_blue    navy             medium_blue 
+royalblue        skyblue          cyan             light_cyan 
+dark_cyan        magenta          light_magenta    dark_magenta
+turquoise        light_turquoise  dark_turquoise   pink 
+light_pink       dark_pink        coral            light_coral 
+orange_red       salmon           light_salmon     dark_salmon 
+aquamarine       khaki            dark_khaki       goldenrod 
+light_goldenrod  dark_goldenrod   gold             beige 
+brown            orange           dark_orange      violet 
+dark_violet      plum             purple
+
+
+Pontos:
+
+-1 none
+ 0 dot
+ 1 plus
+ 2 multiply
+ 3 asterisk
+ 4 square
+ 5 filled_square
+ 6 circle
+ 7 filled_circle
+ 8 up_triangle
+ 9 filled_up_triangle
+10 down_triangle
+11 filled_down_triangle
+12 diamant
+13 filled_diamant
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+wxdraw2d
+(
+
+  xrange = [0,10],
+  yrange = [0,16],
+
+  xtics             = {0},
+  ytics             = {0},
+  axis_top          = false,
+  axis_bottom       = false,
+  axis_right        = false,
+  axis_left         = false,
+  xaxis             = false,
+  yaxis             = false,
+
+  color      = black,
+  point_size = 2,
+
+  point_type = none                 , points( [ [1, 1] , [5, 1] , [9, 1] ] ),
+  point_type = dot                  , points( [ [1, 2] , [5, 2] , [9, 2] ] ),
+  point_type = plus                 , points( [ [1, 3] , [5, 3] , [9, 3] ] ),
+  point_type = multiply             , points( [ [1, 4] , [5, 4] , [9, 4] ] ),
+  point_type = asterisk             , points( [ [1, 5] , [5, 5] , [9, 5] ] ),
+  point_type = square               , points( [ [1, 6] , [5, 6] , [9, 6] ] ),
+  point_type = filled_square        , points( [ [1, 7] , [5, 7] , [9, 7] ] ),
+  point_type = circle               , points( [ [1, 8] , [5, 8] , [9, 8] ] ),
+  point_type = filled_circle        , points( [ [1, 9] , [5, 9] , [9, 9] ] ),
+  point_type = up_triangle          , points( [ [1,10] , [5,10] , [9,10] ] ),
+  point_type = filled_up_triangle   , points( [ [1,11] , [5,11] , [9,11] ] ),
+  point_type = down_triangle        , points( [ [1,12] , [5,12] , [9,12] ] ),
+  point_type = filled_down_triangle , points( [ [1,13] , [5,13] , [9,13] ] ),
+  point_type = diamant              , points( [ [1,14] , [5,14] , [9,14] ] ),
+  point_type = filled_diamant       , points( [ [1,15] , [5,15] , [9,15] ] )
+
+);
+/* [wxMaxima: input   end   ] */
+
+
+
+/* Old versions of Maxima abort on loading files that end in a comment. */
+"Created with wxMaxima 22.04.0"$

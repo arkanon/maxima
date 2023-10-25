@@ -1,0 +1,53 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 22.04.0 ] */
+/* [wxMaxima: comment start ]
+2011/08/04 Qui 03:19:45 -03
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+f1(x) := abs(x/2)-((3*sqrt(33)-7)/112)*x^2-3+sqrt(1-(abs(abs(x)-2)-1)^2)$
+f2(x) := 9*sqrt(abs((abs(x)-1)*(abs(x)-0.75))/((1-abs(x))*(abs(x)-0.75)))-8*abs(x)$
+f3(x) := 3*abs(x)+0.75*sqrt(abs((abs(x)-0.75)*(abs(x)-0.5))/((0.75-abs(x))*(abs(x)-0.5)))$
+f4(x) := 2.25*sqrt(abs((x-0.5)*(x+0.5))/((0.5-x)*(0.5+x)))$
+f5(x) := (6*sqrt(10))/7+(1.5-0.5*abs(x))*sqrt(abs(abs(x)-1)/(abs(x)-1))-((6*sqrt(10))/14)*sqrt(4-(abs(x)-1)^2)$
+f6(x,y) := (x/7)^2*sqrt(abs(abs(x)-3)/(abs(x)-3))+(y/3)^2*sqrt(abs(y+3*sqrt(33)/7)/(y+3*sqrt(33)/7))-1$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+wxplot2d([f1,f2,f3,f4,f5], [x,-6,6]);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+wxplot2d ([contour, f6], [u,-8,8], [v,-3,3], [gnuplot_preamble,"set cntrparam levels 1"], [gnuplot_term,pngcairo], [plot_format,gnuplot], [gnuplot_preamble,"set terminal pngcairo solid background \"white\" enhanced font \"arial,10\" fontscale 1.0 size 1200,900; set zeroaxis;; ; set cntrparam levels 1"], [gnuplot_out_file,"C:/Users/Usuario/AppData/Local/Temp/maxout_2604_2.png"])
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+batman:
+       [
+         line_width = 2,
+         color = "blue",
+         explicit(f1,x,-4,4),
+         color = "blue",
+         explicit(f2,x,-1,1),
+         color = "red",
+         explicit(f3,x,-0.7,0.7),
+         color = "green",
+         explicit(f4,x,-0.5,0.5),
+         color = "magenta",
+         explicit(f5,x,-3,3),
+         color = "cyan",
+         implicit(f6,x,-7,7,y,-2.4,2.7),
+         xrange = [-7,7],
+         yrange = [-3,3]
+   ]$
+wxdraw2d(batman);
+/* [wxMaxima: input   end   ] */
+
+
+
+/* Old versions of Maxima abort on loading files that end in a comment. */
+"Created with wxMaxima 22.04.0"$

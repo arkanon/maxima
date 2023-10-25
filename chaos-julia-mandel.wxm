@@ -1,0 +1,20 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 22.04.0 ] */
+/* [wxMaxima: input   start ] */
+chaosgame ([[0, 0], [1, 0], [0.5, sqrt(3)/2]], [0.1, 0.1], 1/2, 300, [style, dots] );
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+julia( -0.55, 0.6, [iterations, 36], [x, -0.3, 0.2], [y,  0.3, 0.9], [grid, 320, 320], [color_bar_tics, 0, 6, 36] );
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+mandelbrot([iterations, 30], [x, -2  , 1  ], [y, -1.2, 1.2], [grid, 320, 320] );
+/* [wxMaxima: input   end   ] */
+
+
+
+/* Old versions of Maxima abort on loading files that end in a comment. */
+"Created with wxMaxima 22.04.0"$
