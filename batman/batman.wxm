@@ -1,0 +1,31 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 0.8.5 ] */
+
+/* [wxMaxima: input   start ] */
+load(draw);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+f(a,b,x,y):=a*x^2+b*y^2;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+c1:sqrt(26);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+draw2d(implicit(
+f(1/36,1/9,x,y)
++max(0,2-f(1.5,1,x+3,y+2.7))
++max(0,2-f(1.5,1,x-3,y+2.7))
++max(0,2-f(1.9,1/1.7,(5*(x+1)+(y+3.5))/c1,(-(x+1)+5*(y+3.5))/c1))
++max(0,2-f(1.9,1/1.7,(5*(x-1)-(y+3.5))/c1,((x-1)+5*(y+3.5))/c1))
++max(0,2-((1.1*(x-2))^4-(y-2.1)))
++max(0,2-((1.1*(x+2))^4-(y-2.1)))
++max(0,2-((1.5*x)^8-(y-3.5)))
+-1,
+x,-6,6,y,-4,4));
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$
